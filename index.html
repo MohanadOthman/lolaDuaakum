@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>لولا دعاؤكم</title>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Scheherazade+New:wght@400;600;700&family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1a1209;--gold:#c49a2b;--gold-light:#e8c96a;--gold-dim:#8a6a1a;
+  --teal:#1a5c5a;--teal-light:#2a7a77;--cream:#faf6ea;--white:#fff;
+  --shadow:rgba(26,18,9,.14);--border:rgba(196,154,43,.28);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--cream);color:var(--ink);font-family:'Tajawal',sans-serif;min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 15% 15%,rgba(196,154,43,.07) 0%,transparent 55%),radial-gradient(ellipse at 85% 85%,rgba(26,92,90,.05) 0%,transparent 55%);pointer-events:none;z-index:0;}
+
+/* HEADER */
+header{position:relative;z-index:5;text-align:center;padding:52px 20px 34px;border-bottom:1px solid var(--border);background:linear-gradient(180deg,rgba(196,154,43,.08) 0%,transparent 100%);}
+.bismillah{font-family:'Scheherazade New',serif;font-size:clamp(1.15rem,3vw,1.7rem);color:var(--gold-dim);margin-bottom:18px;opacity:.85;}
+header h1{font-family:'Amiri',serif;font-size:clamp(2.2rem,7vw,3.9rem);font-weight:700;line-height:1.2;margin-bottom:10px;}
+header h1 span{color:var(--gold-dim);}
+.h-ayah{font-family:'Scheherazade New',serif;font-size:clamp(.95rem,2.4vw,1.22rem);color:var(--teal);margin:12px auto;max-width:500px;line-height:2;}
+.h-ref{font-size:.8rem;color:var(--gold-dim);}
+.divider{display:flex;align-items:center;gap:14px;justify-content:center;margin:12px 0;}
+.divider::before,.divider::after{content:'';flex:1;max-width:90px;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);}
+.divider span{color:var(--gold);font-size:1rem;}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:100;background:rgba(250,246,234,.96);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);display:flex;justify-content:center;overflow-x:auto;scrollbar-width:none;}
+nav::-webkit-scrollbar{display:none;}
+.nb{background:none;border:none;padding:14px 16px;font-family:'Tajawal',sans-serif;font-size:.91rem;font-weight:500;color:var(--ink);cursor:pointer;white-space:nowrap;border-bottom:2.5px solid transparent;transition:all .2s;opacity:.6;}
+.nb:hover{opacity:1;color:var(--gold-dim);}
+.nb.active{color:var(--gold-dim);border-bottom-color:var(--gold);opacity:1;font-weight:700;}
+
+/* MAIN */
+main{position:relative;z-index:1;max-width:840px;margin:0 auto;padding:34px 18px 90px;}
+.sec{display:none;animation:fu .32s ease;}
+.sec.active{display:block;}
+@keyframes fu{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+
+/* SECTION TITLE */
+.st{text-align:center;margin-bottom:28px;}
+.st h2{font-family:'Amiri',serif;font-size:clamp(1.65rem,5vw,2.5rem);margin-bottom:4px;}
+.st p{color:#6b5838;font-size:.91rem;margin-top:7px;}
+
+/* LOADING */
+.loading{text-align:center;padding:60px 20px;color:var(--gold-dim);font-size:1.1rem;}
+.loading::after{content:'...';animation:dots 1.2s infinite;}
+@keyframes dots{0%{content:''}33%{content:'.'}66%{content:'..'}100%{content:'...'}}
+
+/* VIEW TOGGLE */
+.vt{display:flex;gap:8px;justify-content:center;margin-bottom:22px;}
+.vtb{background:none;border:1px solid var(--border);border-radius:18px;padding:6px 16px;font-family:'Tajawal',sans-serif;font-size:.86rem;cursor:pointer;color:#6b5838;transition:all .2s;}
+.vtb.on{background:var(--teal);color:#fff;border-color:var(--teal);}
+
+/* CATEGORY GRID */
+.cgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(178px,1fr));gap:12px;margin-bottom:36px;}
+.cbtn{background:var(--white);border:1px solid var(--border);border-radius:11px;padding:16px 12px;text-align:center;cursor:pointer;transition:all .23s;box-shadow:0 2px 7px var(--shadow);font-family:'Tajawal',sans-serif;}
+.cbtn:hover{border-color:var(--gold);box-shadow:0 4px 16px rgba(196,154,43,.17);transform:translateY(-2px);}
+.cbtn.sel{background:linear-gradient(135deg,var(--teal),var(--teal-light));border-color:var(--teal);color:#fff;}
+.ci{font-size:1.7rem;display:block;margin-bottom:7px;}
+.cl{font-size:.92rem;font-weight:600;}
+
+/* ACCORDION CATS */
+.cacc{display:flex;flex-direction:column;gap:7px;margin-bottom:36px;}
+.ai{background:var(--white);border:1px solid var(--border);border-radius:9px;overflow:hidden;box-shadow:0 2px 6px var(--shadow);}
+.ah{display:flex;align-items:center;gap:10px;padding:13px 17px;cursor:pointer;font-family:'Tajawal',sans-serif;font-size:.97rem;font-weight:600;transition:background .18s;user-select:none;}
+.ah:hover{background:rgba(196,154,43,.05);}
+.ah.open{background:rgba(26,92,90,.05);color:var(--teal);}
+.aa{margin-right:auto;font-size:.73rem;transition:transform .23s;opacity:.45;}
+.ah.open .aa{transform:rotate(180deg);opacity:1;}
+.ab{display:none;padding:0 0 4px;}
+.ab.open{display:block;}
+
+/* DUA CARDS */
+#dout{animation:fu .28s ease;}
+.dc{background:var(--white);border:1px solid var(--border);border-radius:13px;padding:26px 26px 20px;margin-bottom:20px;box-shadow:0 3px 16px var(--shadow);position:relative;overflow:hidden;}
+.dc::before{content:'';position:absolute;top:0;right:0;width:3.5px;height:100%;background:linear-gradient(180deg,var(--gold),var(--teal));}
+.dn{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;background:var(--gold);color:#fff;border-radius:50%;font-size:.82rem;font-weight:700;margin-bottom:14px;}
+.dtxt{font-family:'Scheherazade New',serif;font-size:clamp(1.22rem,3.1vw,1.72rem);line-height:2.3;color:var(--ink);margin-bottom:14px;text-align:justify;}
+.dex{border-top:1px solid rgba(196,154,43,.18);padding-top:13px;margin-top:13px;}
+.dlbl{font-weight:700;font-size:.96rem;margin-bottom:5px;}
+.dnote{font-size:.91rem;line-height:1.85;color:#4a3c28;margin-bottom:7px;border-right:3px solid var(--gold-light);padding-right:11px;}
+.dsrc{display:inline-block;background:rgba(196,154,43,.09);border:1px solid rgba(196,154,43,.25);border-radius:16px;padding:2px 12px;font-size:.78rem;color:var(--gold-dim);}
+
+/* INLINE TASBIH */
+.tsb{display:flex;align-items:center;gap:10px;margin-top:14px;padding-top:12px;border-top:1px dashed rgba(196,154,43,.22);flex-wrap:wrap;}
+.tsb-n{font-family:'Amiri',serif;font-size:1.55rem;font-weight:700;min-width:40px;text-align:center;transition:transform .1s,color .1s;}
+.tsb-n.bmp{transform:scale(1.22);color:var(--teal);}
+.tsb-lbl{font-size:.79rem;color:var(--gold-dim);}
+.tsb-prg{flex:1;min-width:60px;height:4px;background:rgba(196,154,43,.13);border-radius:2px;overflow:hidden;}
+.tsb-bar{height:100%;background:linear-gradient(90deg,var(--teal),var(--gold));border-radius:2px;transition:width .22s;width:0%;}
+.tsb-tap{background:linear-gradient(135deg,var(--teal),var(--teal-light));color:#fff;border:none;border-radius:50%;width:44px;height:44px;font-size:1.2rem;cursor:pointer;box-shadow:0 3px 10px rgba(26,92,90,.28);transition:transform .1s;flex-shrink:0;}
+.tsb-tap:active{transform:scale(.87);}
+.tsb-rst{background:none;border:none;font-size:.75rem;color:#aaa;cursor:pointer;text-decoration:underline;}
+.done{display:none;font-size:.8rem;color:var(--teal);font-weight:600;}
+.done.show{display:inline;}
+
+/* TILAWA MODE */
+#til-overlay{display:none;position:fixed;inset:0;z-index:200;background:linear-gradient(160deg,#0d2e2c 0%,#0a2420 60%,#162b20 100%);flex-direction:column;align-items:center;justify-content:center;padding:32px 24px;text-align:center;}
+#til-overlay.show{display:flex;}
+#til-close{position:absolute;top:20px;left:20px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;border-radius:20px;padding:7px 16px;font-family:'Tajawal',sans-serif;font-size:.88rem;cursor:pointer;}
+#til-group{position:absolute;top:20px;right:20px;font-family:'Tajawal',sans-serif;font-size:.82rem;color:rgba(255,255,255,.5);}
+#til-txt{font-family:'Scheherazade New',serif;font-size:clamp(1.6rem,5vw,2.6rem);line-height:2.2;color:#fff;max-width:700px;margin-bottom:28px;}
+#til-sharh{font-size:clamp(.85rem,2vw,1rem);color:rgba(255,255,255,.65);line-height:1.9;max-width:600px;margin-bottom:32px;border-top:1px solid rgba(255,255,255,.12);padding-top:18px;}
+#til-count-lbl{font-size:.82rem;color:rgba(255,255,255,.5);margin-bottom:4px;}
+#til-num{font-family:'Amiri',serif;font-size:5rem;color:#fff;font-weight:700;line-height:1;transition:transform .1s;}
+#til-num.bmp{transform:scale(1.12);color:var(--gold-light);}
+#til-target{font-size:.8rem;color:rgba(255,255,255,.4);margin-top:2px;margin-bottom:20px;}
+#til-prg-wrap{width:200px;height:5px;background:rgba(255,255,255,.12);border-radius:3px;margin-bottom:24px;overflow:hidden;}
+#til-prg{height:100%;background:linear-gradient(90deg,var(--teal-light),var(--gold-light));border-radius:3px;transition:width .25s;width:0%;}
+#til-done{display:none;font-size:.9rem;color:var(--gold-light);font-weight:600;margin-bottom:10px;}
+#til-done.show{display:block;}
+.til-btns{display:flex;gap:14px;align-items:center;}
+#til-tap{background:linear-gradient(135deg,var(--teal-light),#3a9995);color:#fff;border:none;border-radius:50%;width:80px;height:80px;font-size:2rem;cursor:pointer;box-shadow:0 5px 18px rgba(0,0,0,.4);transition:transform .12s;}
+#til-tap:active{transform:scale(.9);}
+#til-rst{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.6);border-radius:20px;padding:7px 16px;font-family:'Tajawal',sans-serif;font-size:.82rem;cursor:pointer;}
+.til-nav{display:flex;gap:10px;margin-top:20px;}
+.til-nav button{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);color:rgba(255,255,255,.7);border-radius:20px;padding:7px 18px;font-family:'Tajawal',sans-serif;font-size:.84rem;cursor:pointer;transition:background .18s;}
+.til-nav button:hover{background:rgba(255,255,255,.14);}
+
+/* ADKAR LIST */
+.adk-list{display:flex;flex-direction:column;gap:14px;}
+.adk-group{background:var(--white);border:1px solid var(--border);border-radius:13px;overflow:hidden;box-shadow:0 2px 14px var(--shadow);}
+.adk-gh{display:flex;align-items:center;gap:11px;padding:16px 20px;cursor:pointer;font-family:'Tajawal',sans-serif;font-size:1rem;font-weight:700;user-select:none;transition:background .18s;}
+.adk-gh:hover{background:rgba(196,154,43,.05);}
+.adk-gh.open{background:rgba(26,92,90,.05);color:var(--teal);}
+.adk-ga{margin-right:auto;font-size:.76rem;opacity:.4;transition:transform .23s;}
+.adk-gh.open .adk-ga{transform:rotate(180deg);opacity:1;}
+.adk-gb{display:none;}
+.adk-gb.open{display:block;}
+.adk-item{padding:18px 20px;border-top:1px solid rgba(196,154,43,.13);}
+.adk-txt{font-family:'Scheherazade New',serif;font-size:clamp(1.18rem,2.9vw,1.58rem);line-height:2.3;color:var(--ink);margin-bottom:10px;}
+.adk-chip{display:inline-block;background:rgba(196,154,43,.09);border:1px solid rgba(196,154,43,.22);border-radius:12px;padding:2px 11px;font-size:.78rem;color:var(--gold-dim);margin-bottom:8px;}
+.adk-sharh{font-size:.89rem;color:#4a3c28;line-height:1.85;border-right:3px solid var(--gold-light);padding-right:11px;margin-bottom:10px;}
+.adk-row{display:flex;align-items:center;gap:10px;margin-top:8px;}
+.adk-cnt{font-family:'Amiri',serif;font-size:1.4rem;font-weight:700;min-width:36px;text-align:center;transition:transform .1s,color .1s;}
+.adk-cnt.bmp{transform:scale(1.2);color:var(--teal);}
+.adk-tap{background:var(--teal);color:#fff;border:none;border-radius:50%;width:38px;height:38px;font-size:1rem;cursor:pointer;box-shadow:0 2px 8px rgba(26,92,90,.25);transition:transform .1s;flex-shrink:0;}
+.adk-tap:active{transform:scale(.88);}
+.adk-mini-prg{flex:1;height:4px;background:rgba(196,154,43,.12);border-radius:2px;overflow:hidden;}
+.adk-mini-bar{height:100%;background:linear-gradient(90deg,var(--teal),var(--gold));border-radius:2px;transition:width .22s;width:0%;}
+.adk-rst{background:none;border:none;font-size:.73rem;color:#bbb;cursor:pointer;text-decoration:underline;}
+.adk-done{display:none;font-size:.77rem;color:var(--teal);font-weight:600;}
+.adk-done.show{display:inline;}
+.open-til{background:none;border:1px solid rgba(26,92,90,.3);border-radius:16px;padding:5px 13px;font-family:'Tajawal',sans-serif;font-size:.78rem;color:var(--teal);cursor:pointer;transition:all .18s;white-space:nowrap;}
+.open-til:hover{background:var(--teal);color:#fff;}
+
+/* ════ KHARITA (خريطة الأذكار) ════ */
+#kharita-wrap{width:100%;height:calc(100vh - 180px);min-height:500px;border-radius:16px;overflow:hidden;position:relative;box-shadow:0 4px 24px var(--shadow);}
+#kharita-frame{width:100%;height:100%;border:none;border-radius:16px;}
+
+/* INFO CARDS */
+.ic-list{display:flex;flex-direction:column;gap:14px;}
+.ic{background:var(--white);border:1px solid var(--border);border-radius:13px;overflow:hidden;box-shadow:0 2px 12px var(--shadow);}
+.ich{display:flex;align-items:center;gap:10px;padding:15px 19px;cursor:pointer;font-weight:700;font-size:.97rem;font-family:'Tajawal',sans-serif;transition:background .18s;user-select:none;}
+.ich:hover{background:rgba(196,154,43,.05);}
+.ich.open{background:rgba(26,92,90,.06);color:var(--teal);}
+.ica{margin-right:auto;font-size:.74rem;opacity:.4;transition:transform .23s;}
+.ich.open .ica{transform:rotate(180deg);opacity:1;}
+.icb{display:none;padding:4px 19px 19px;}
+.icb.open{display:block;}
+.ilist{list-style:none;padding:0;}
+.ilist li{padding:8px 0;border-bottom:1px dashed rgba(196,154,43,.16);display:flex;gap:9px;font-size:.93rem;color:#4a3c28;line-height:1.82;}
+.ilist li:last-child{border-bottom:none;}
+.ilist li::before{content:'✦';color:var(--gold);flex-shrink:0;margin-top:3px;}
+.qref{font-family:'Scheherazade New',serif;font-size:1.08rem;color:var(--teal);display:block;margin:5px 0;padding:7px 12px;background:rgba(26,92,90,.05);border-radius:7px;line-height:2;}
+.href{font-size:.78rem;color:var(--gold-dim);display:block;margin-top:3px;}
+.sub-h{font-family:'Amiri',serif;font-size:1.15rem;color:var(--teal);margin:14px 0 9px;border-bottom:1px solid var(--border);padding-bottom:5px;}
+.note-p{font-size:.93rem;color:#4a3c28;line-height:1.92;margin-bottom:10px;}
+.tips-list{list-style:none;padding:0;margin-top:12px;}
+.tips-list li{padding:6px 0;border-bottom:1px dashed rgba(196,154,43,.14);font-size:.88rem;color:#4a3c28;display:flex;gap:8px;}
+.tips-list li::before{content:'⟵';color:var(--gold);flex-shrink:0;}
+
+/* ABOUT */
+.abt{background:var(--white);border:1px solid var(--border);border-radius:13px;padding:34px;box-shadow:0 3px 16px var(--shadow);}
+.abt h3{font-family:'Amiri',serif;font-size:1.4rem;color:var(--teal);margin:22px 0 11px;}
+.abt h3:first-child{margin-top:0;}
+.abt p{font-size:.95rem;color:#4a3c28;line-height:1.95;margin-bottom:11px;}
+.abt ul{list-style:none;padding:0;margin-bottom:12px;}
+.abt ul li{padding:7px 0;border-bottom:1px dashed rgba(196,154,43,.16);display:flex;gap:9px;font-size:.92rem;color:#4a3c28;line-height:1.75;}
+.abt ul li:last-child{border-bottom:none;}
+.abt ul li::before{content:'✦';color:var(--gold);flex-shrink:0;margin-top:3px;}
+.email{text-align:center;padding:13px;background:rgba(196,154,43,.07);border-radius:9px;font-size:.93rem;color:#4a3c28;margin-top:6px;}
+
+footer{position:relative;z-index:1;text-align:center;padding:22px;border-top:1px solid var(--border);color:#8a7055;font-size:.84rem;}
+
+@media(max-width:580px){
+  .cgrid{grid-template-columns:repeat(2,1fr);}
+  .dc,.adk-item{padding:18px 15px;}
+  .abt{padding:24px 18px;}
+  #til-txt{font-size:clamp(1.4rem,5vw,2rem);}
+  #til-num{font-size:4rem;}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="bismillah">بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ</div>
+  <h1>لولا <span>دعاؤكم</span></h1>
+  <div class="divider"><span>✦</span></div>
+  <div class="h-ayah">قُلْ مَا يَعْبَأُ بِكُمْ رَبِّي لَوْلَا دُعَاؤُكُمْ</div>
+  <div class="h-ref">الفرقان: ٧٧</div>
+</header>
+
+<nav>
+  <button class="nb active" onclick="showSec('duas',this)">الأدعية</button>
+  <button class="nb" onclick="showSec('adkar',this)">الأذكار</button>
+  <button class="nb" onclick="showSec('kharita',this)">🗺️ خريطة الأذكار</button>
+  <button class="nb" onclick="showSec('adab',this)">آداب الدعاء</button>
+  <button class="nb" onclick="showSec('mawadi3',this)">مواضع الإجابة</button>
+  <button class="nb" onclick="showSec('about',this)">عن الكتاب</button>
+</nav>
+
+<main>
+
+<!-- ══ DUAS ══ -->
+<section id="duas" class="sec active">
+  <div class="st"><h2>الأدعية</h2><div class="divider"><span>❧</span></div><p>اختر حالك</p></div>
+  <div class="vt">
+    <button class="vtb on" id="vg" onclick="setDuaView('grid')">⊞ شبكة</button>
+    <button class="vtb" id="vl" onclick="setDuaView('list')">☰ قائمة</button>
+  </div>
+  <div id="cgrid" class="cgrid"><div class="loading">جاري التحميل</div></div>
+  <div id="cacc" class="cacc" style="display:none"></div>
+  <div id="dout"></div>
+</section>
+
+<!-- ══ ADKAR ══ -->
+<section id="adkar" class="sec">
+  <div class="st"><h2>الأذكار</h2><div class="divider"><span>❧</span></div></div>
+  <div class="vt">
+    <button class="vtb on" id="val" onclick="setAdkView('list')">☰ قائمة</button>
+    <button class="vtb" id="vat" onclick="setAdkView('til')">🌙 وضع التلاوة</button>
+  </div>
+  <div id="adk-list" class="adk-list"><div class="loading">جاري التحميل</div></div>
+</section>
+
+<!-- ══ KHARITA ══ -->
+<section id="kharita" class="sec">
+  <div class="st">
+    <h2>🗺️ خريطة الأذكار</h2>
+    <div class="divider"><span>❧</span></div>
+    <p>رحلة تفاعلية عبر أذكار الصباح والمساء — اختر محطة وابدأ</p>
+  </div>
+  <div id="kharita-wrap">
+    <iframe id="kharita-frame" src="kharita.html" title="خريطة الأذكار التفاعلية"></iframe>
+  </div>
+</section>
+
+<!-- ══ ADAB ══ -->
+<section id="adab" class="sec">
+  <div class="st"><h2>آداب الدعاء</h2><div class="divider"><span>❧</span></div><p>من الكتاب — آداب وأسباب الإجابة</p></div>
+  <div id="adab-list" class="ic-list"><div class="loading">جاري التحميل</div></div>
+</section>
+
+<!-- ══ MAWADI3 ══ -->
+<section id="mawadi3" class="sec">
+  <div class="st"><h2>مواضع إجابة الدعاء</h2><div class="divider"><span>❧</span></div><p>أوقات وأحوال تُستجاب فيها الدعوة</p></div>
+  <div id="mawadi3-list" class="ic-list"><div class="loading">جاري التحميل</div></div>
+</section>
+
+<!-- ══ ABOUT ══ -->
+<section id="about" class="sec">
+  <div class="st"><h2>عن الكتاب</h2><div class="divider"><span>❧</span></div></div>
+  <div class="abt">
+    <h3>قُلْ مَا يَعْبَأُ بِكُمْ رَبِّي لَوْلَا دُعَاؤُكُمْ</h3>
+    <p>هذا الموقع مُستخلَص من كتاب <strong>«لولا دعاؤكم»</strong>، وقفه مؤلّفه لله تعالى، يُوزَّع مجانًا أو يُباع بسعر التكلفة. الفكرة وُلدت حين رأى مؤلفه مُعتمرًا صغيرًا يقرأ أدعية بصوت عالٍ — فتساءل: لِمَ لا يوجد شرح للأدعية الموثّرة بعبارة مبسّطة؟</p>
+    <p>الكتاب في جوهره شرح لمعاني الأدعية الأثيرة — لا مجرد سرد ألفاظ. لأن الدعاء والرقية حرام عند أهل العلم ما جُهل معناه، إذ قد يكون فيه كفر أو ما هو محرّم شرعًا.</p>
+    <h3>منهج الكتاب</h3>
+    <ul>
+      <li>الأدعية من القرآن وأدعية الأنبياء والصالحين، ومن الأحاديث الصحيحة في الكتب الستة فقط — بدرجة (صحيح) وفق تصحيح الشيخ الألباني رحمه الله.</li>
+      <li>تقسيم الأدعية على منهج الإمام ابن قيم الجوزية في «الوابل الصيب من الكلم الطيب».</li>
+      <li>الشرح مأخوذ من كتب شروح الأحاديث كفتح الباري، وفتاوى ابن تيمية، وكتب ابن القيم.</li>
+      <li>الدعاء في الصفحة اليمنى وشرحه في الصفحة المقابلة — لتتمكن من المطابقة دون البحث.</li>
+    </ul>
+    <h3>فصول الكتاب</h3>
+    <ul>
+      <li><strong>الفصل الأول:</strong> سر الدعاء — ما هو الدعاء، معية الله، حسن الظن بالله</li>
+      <li><strong>الفصل الثاني:</strong> آداب الدعاء، مواضع الإجابة، من تُقبل دعوتهم</li>
+      <li><strong>الفصل الثالث:</strong> الأدعية بأحوالها (الاستغفار، الرزق، الهم، الشفاء، الأهل، الاستخارة…)</li>
+      <li><strong>الفصل الرابع:</strong> الأذكار — فضائل السور، أفضل الأذكار، الاستغفار، الحمد، التسبيح</li>
+    </ul>
+    <h3>للتواصل حول الكتاب</h3>
+    <div class="email">📧 thebook77@gmail.com</div>
+  </div>
+</section>
+
+</main>
+
+<!-- TILAWA OVERLAY -->
+<div id="til-overlay">
+  <button id="til-close" onclick="closeTil()">✕ إغلاق</button>
+  <div id="til-group"></div>
+  <div id="til-txt"></div>
+  <div id="til-sharh"></div>
+  <div id="til-count-lbl">العدد</div>
+  <div id="til-num">٠</div>
+  <div id="til-target"></div>
+  <div id="til-prg-wrap"><div id="til-prg"></div></div>
+  <div id="til-done">✓ أحسنت! تقبّل الله منك</div>
+  <div class="til-btns">
+    <button id="til-rst" onclick="tilReset()">إعادة</button>
+    <button id="til-tap" onclick="tilTap()">🤲</button>
+  </div>
+  <div class="til-nav">
+    <button onclick="tilNav(-1)">→ السابق</button>
+    <button onclick="tilNav(1)">← التالي</button>
+  </div>
+</div>
+
+<footer>
+  <p>من كتاب «لولا دعاؤكم» — وقف لله تعالى</p>
+  <p style="margin-top:5px;font-size:.76rem;opacity:.6">وَقُلْ رَبِّ زِدْنِي عِلْمًا</p>
+</footer>
+
+<script>
+'use strict';
+// ══════════════════════════════════════
+// STATE & CACHE
+// ══════════════════════════════════════
+let DUAS = null, ADKAR = null, ADAB_DATA = null;
+let duaView = 'grid', adkView = 'list';
+let tsbState = {}, adkState = {};
+let tilData = [], tilIdx = 0, tilCnt = 0, tilTarget = 1;
+
+const AR = n => String(n).replace(/\d/g, d => '٠١٢٣٤٥٦٧٨٩'[d]);
+const key = (a, b) => `${a}_${b}`;
+
+// ══════════════════════════════════════
+// JSON LOADER
+// ══════════════════════════════════════
+async function loadJSON(path) {
+  const res = await fetch(path);
+  if (!res.ok) throw new Error(`فشل تحميل ${path}`);
+  return res.json();
+}
+
+async function initAll() {
+  try {
+    const [duasData, adkarData, adabData] = await Promise.all([
+      loadJSON('data/duas.json'),
+      loadJSON('data/adkar.json'),
+      loadJSON('data/adab-mawadi3.json')
+    ]);
+    DUAS = duasData;
+    ADKAR = adkarData;
+    ADAB_DATA = adabData;
+    buildDuasGrid();
+    buildDuasAccordion();
+    buildAdkList();
+    buildAdabList();
+    buildMawadi3List();
+  } catch (e) {
+    console.error(e);
+    document.querySelectorAll('.loading').forEach(el => el.textContent = '⚠️ تعذّر التحميل');
+  }
+}
+
+// ══════════════════════════════════════
+// NAV
+// ══════════════════════════════════════
+function showSec(id, btn) {
+  document.querySelectorAll('.sec').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nb').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ══════════════════════════════════════
+// DUAS — BUILD GRID & ACCORDION
+// ══════════════════════════════════════
+function buildDuasGrid() {
+  const grid = document.getElementById('cgrid');
+  grid.innerHTML = DUAS.categories.map(c =>
+    `<button class="cbtn" onclick="pickCat(this,'${c.id}')">
+      <span class="ci">${c.icon}</span>
+      <span class="cl">${c.label}</span>
+    </button>`
+  ).join('');
+}
+
+function buildDuasAccordion() {
+  const acc = document.getElementById('cacc');
+  acc.innerHTML = DUAS.categories.map(c =>
+    `<div class="ai">
+      <div class="ah" onclick="togAcc(this,'${c.id}')">${c.icon} ${c.label}<span class="aa">▼</span></div>
+      <div class="ab" id="acc-${c.id}"></div>
+    </div>`
+  ).join('');
+}
+
+function setDuaView(v) {
+  duaView = v;
+  document.getElementById('vg').classList.toggle('on', v === 'grid');
+  document.getElementById('vl').classList.toggle('on', v === 'list');
+  document.getElementById('cgrid').style.display = v === 'grid' ? 'grid' : 'none';
+  document.getElementById('cacc').style.display = v === 'list' ? 'flex' : 'none';
+  document.getElementById('dout').innerHTML = '';
+  document.querySelectorAll('.cbtn').forEach(b => b.classList.remove('sel'));
+}
+
+function pickCat(btn, cat) {
+  document.querySelectorAll('.cbtn').forEach(b => b.classList.remove('sel'));
+  btn.classList.add('sel');
+  renderDuas(cat);
+  document.getElementById('dout').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function togAcc(hdr, cat) {
+  const body = document.getElementById('acc-' + cat);
+  const isOpen = hdr.classList.contains('open');
+  document.querySelectorAll('.ah').forEach(h => h.classList.remove('open'));
+  document.querySelectorAll('.ab').forEach(b => { b.classList.remove('open'); b.innerHTML = ''; });
+  if (!isOpen) { hdr.classList.add('open'); body.classList.add('open'); renderDuasInto(cat, body); }
+}
+
+function renderDuas(cat) {
+  const el = document.getElementById('dout');
+  el.innerHTML = '';
+  renderDuasInto(cat, el);
+}
+
+function renderDuasInto(cat, container) {
+  const items = (DUAS.duas[cat] || []);
+  container.innerHTML = items.map((d, i) => {
+    const k = key(cat, i);
+    if (!tsbState[k]) tsbState[k] = { cnt: 0, target: d.target || 33 };
+    const { cnt, target } = tsbState[k];
+    const pct = Math.min(cnt / target * 100, 100);
+    return `<div class="dc">
+      <div class="dn">${i + 1}</div>
+      <div class="dtxt">${d.text}</div>
+      <div class="dex">
+        <div class="dlbl">${d.label}</div>
+        ${d.note ? `<div class="dnote">${d.note}</div>` : ''}
+        <span class="dsrc">${d.source}</span>
+      </div>
+      <div class="tsb">
+        <span class="tsb-n" id="tn-${k}">${AR(cnt)}</span>
+        <span class="tsb-lbl">/ ${AR(target)}</span>
+        <div class="tsb-prg"><div class="tsb-bar" id="tb-${k}" style="width:${pct}%"></div></div>
+        <span class="done${cnt >= target ? ' show' : ''}" id="td-${k}">✓</span>
+        <button class="tsb-tap" onclick="tsbTap('${cat}',${i})">🤲</button>
+        <button class="tsb-rst" onclick="tsbRst('${cat}',${i})">↺</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function tsbTap(cat, i) {
+  const k = key(cat, i);
+  const d = DUAS.duas[cat][i];
+  if (!tsbState[k]) tsbState[k] = { cnt: 0, target: d.target || 33 };
+  const s = tsbState[k]; s.cnt++;
+  const el = document.getElementById('tn-' + k); if (!el) return;
+  el.textContent = AR(s.cnt); el.classList.add('bmp'); setTimeout(() => el.classList.remove('bmp'), 100);
+  const bar = document.getElementById('tb-' + k); if (bar) bar.style.width = Math.min(s.cnt / s.target * 100, 100) + '%';
+  const done = document.getElementById('td-' + k); if (done && s.cnt >= s.target) done.classList.add('show');
+}
+
+function tsbRst(cat, i) {
+  const k = key(cat, i); if (tsbState[k]) tsbState[k].cnt = 0;
+  const el = document.getElementById('tn-' + k); if (el) el.textContent = AR(0);
+  const bar = document.getElementById('tb-' + k); if (bar) bar.style.width = '0%';
+  const done = document.getElementById('td-' + k); if (done) done.classList.remove('show');
+}
+
+// ══════════════════════════════════════
+// ADKAR
+// ══════════════════════════════════════
+function setAdkView(v) {
+  adkView = v;
+  document.getElementById('val').classList.toggle('on', v === 'list');
+  document.getElementById('vat').classList.toggle('on', v === 'til');
+  document.getElementById('adk-list').style.display = v === 'list' ? 'flex' : 'none';
+  if (v === 'til') openTilMode();
+}
+
+function buildAdkList() {
+  const el = document.getElementById('adk-list');
+  el.innerHTML = ADKAR.map((grp, gi) => `
+    <div class="adk-group">
+      <div class="adk-gh" onclick="togAdk(this,'akg-${gi}')">
+        <span>${grp.icon}</span>${grp.title}
+        <span class="adk-ga">▼</span>
+      </div>
+      <div class="adk-gb" id="akg-${gi}">
+        ${grp.items.map((item, ii) => {
+          const k = key(gi, ii);
+          if (!adkState[k]) adkState[k] = { cnt: 0, target: item.target || 33 };
+          const { cnt, target } = adkState[k];
+          const pct = Math.min(cnt / target * 100, 100);
+          return `<div class="adk-item">
+            <div class="adk-txt">${item.text}</div>
+            ${item.chip ? `<span class="adk-chip">${item.chip}</span>` : ''}
+            ${item.sharh ? `<div class="adk-sharh">${item.sharh}</div>` : ''}
+            <div class="adk-row">
+              <span class="adk-cnt" id="ak-${k}">${AR(cnt)}</span>
+              <span style="font-size:.77rem;color:var(--gold-dim)">/ ${AR(target)}</span>
+              <div class="adk-mini-prg"><div class="adk-mini-bar" id="akb-${k}" style="width:${pct}%"></div></div>
+              <span class="adk-done${cnt >= target ? ' show' : ''}" id="akd-${k}">✓</span>
+              <button class="adk-tap" onclick="adkTap(${gi},${ii})">+١</button>
+              <button class="adk-rst" onclick="adkRst(${gi},${ii})">↺</button>
+              <button class="open-til" onclick="openTilAt(${gi},${ii})">🌙 تلاوة</button>
+            </div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+function togAdk(hdr, bodyId) {
+  const body = document.getElementById(bodyId);
+  const isOpen = hdr.classList.contains('open');
+  document.querySelectorAll('.adk-gh').forEach(h => h.classList.remove('open'));
+  document.querySelectorAll('.adk-gb').forEach(b => b.classList.remove('open'));
+  if (!isOpen) { hdr.classList.add('open'); body.classList.add('open'); }
+}
+
+function adkTap(gi, ii) {
+  const k = key(gi, ii);
+  if (!adkState[k]) adkState[k] = { cnt: 0, target: ADKAR[gi].items[ii].target || 33 };
+  const s = adkState[k]; s.cnt++;
+  const el = document.getElementById('ak-' + k); if (!el) return;
+  el.textContent = AR(s.cnt); el.classList.add('bmp'); setTimeout(() => el.classList.remove('bmp'), 100);
+  const bar = document.getElementById('akb-' + k); if (bar) bar.style.width = Math.min(s.cnt / s.target * 100, 100) + '%';
+  const done = document.getElementById('akd-' + k); if (done && s.cnt >= s.target) done.classList.add('show');
+}
+
+function adkRst(gi, ii) {
+  const k = key(gi, ii); if (adkState[k]) adkState[k].cnt = 0;
+  const el = document.getElementById('ak-' + k); if (el) el.textContent = AR(0);
+  const bar = document.getElementById('akb-' + k); if (bar) bar.style.width = '0%';
+  const done = document.getElementById('akd-' + k); if (done) done.classList.remove('show');
+}
+
+// ══════════════════════════════════════
+// TILAWA MODE
+// ══════════════════════════════════════
+function openTilMode() {
+  tilData = [];
+  ADKAR.forEach(grp => grp.items.forEach(item => tilData.push({ ...item, group: grp.title })));
+  tilIdx = 0; tilCnt = 0;
+  showTilItem();
+  document.getElementById('til-overlay').classList.add('show');
+}
+
+function openTilAt(gi, ii) {
+  tilData = [];
+  let startIdx = 0;
+  ADKAR.forEach((grp, g) => grp.items.forEach((item, i) => {
+    if (g === gi && i === ii) startIdx = tilData.length;
+    tilData.push({ ...item, group: grp.title });
+  }));
+  tilIdx = startIdx; tilCnt = 0;
+  showTilItem();
+  document.getElementById('til-overlay').classList.add('show');
+}
+
+function showTilItem() {
+  const d = tilData[tilIdx]; if (!d) return;
+  tilTarget = d.target || 33;
+  document.getElementById('til-group').textContent = d.group;
+  document.getElementById('til-txt').textContent = d.text;
+  document.getElementById('til-sharh').textContent = d.sharh || '';
+  document.getElementById('til-sharh').style.display = d.sharh ? 'block' : 'none';
+  document.getElementById('til-target').textContent = 'الهدف: ' + AR(tilTarget);
+  tilCnt = 0; updTil();
+}
+
+function tilTap() {
+  tilCnt++;
+  const el = document.getElementById('til-num');
+  el.textContent = AR(tilCnt); el.classList.add('bmp'); setTimeout(() => el.classList.remove('bmp'), 120);
+  updTil();
+}
+
+function updTil() {
+  document.getElementById('til-num').textContent = AR(tilCnt);
+  document.getElementById('til-prg').style.width = Math.min(tilCnt / tilTarget * 100, 100) + '%';
+  const done = document.getElementById('til-done');
+  if (tilCnt >= tilTarget) done.classList.add('show'); else done.classList.remove('show');
+}
+
+function tilReset() { tilCnt = 0; updTil(); document.getElementById('til-done').classList.remove('show'); }
+
+function tilNav(dir) {
+  tilIdx = (tilIdx + dir + tilData.length) % tilData.length;
+  showTilItem();
+}
+
+function closeTil() {
+  document.getElementById('til-overlay').classList.remove('show');
+  document.getElementById('val').classList.add('on');
+  document.getElementById('vat').classList.remove('on');
+  document.getElementById('adk-list').style.display = 'flex';
+  adkView = 'list';
+}
+
+// ══════════════════════════════════════
+// ADAB & MAWADI3 FROM JSON
+// ══════════════════════════════════════
+function buildAdabList() {
+  const el = document.getElementById('adab-list');
+  el.innerHTML = ADAB_DATA.adab.map(sec => {
+    if (sec.type === 'essay') {
+      return `<div class="ic">
+        <div class="ich${sec.open ? ' open' : ''}" onclick="togIC(this)">${sec.icon} ${sec.title}<span class="ica"${sec.open ? ' style="transform:rotate(180deg);opacity:1"' : ''}>▼</span></div>
+        <div class="icb${sec.open ? ' open' : ''}">
+          ${sec.sections.map(s => `
+            ${s.subtitle ? `<div class="sub-h">${s.subtitle}</div>` : ''}
+            ${s.qref ? `<span class="qref">${s.qref}</span><span class="href">${s.ref}</span>` : ''}
+            ${s.body ? `<p class="note-p">${s.body}</p>` : ''}
+          `).join('')}
+        </div>
+      </div>`;
+    }
+    return `<div class="ic">
+      <div class="ich${sec.open ? ' open' : ''}" onclick="togIC(this)">${sec.icon} ${sec.title}<span class="ica"${sec.open ? ' style="transform:rotate(180deg);opacity:1"' : ''}>▼</span></div>
+      <div class="icb${sec.open ? ' open' : ''}">
+        <ul class="ilist">
+          ${sec.items.map(item => `<li><div>
+            <strong>${item.title}</strong>
+            ${item.body ? `<br>${item.body}` : ''}
+            ${item.qref ? `<br><span class="qref">${item.qref}</span>` : ''}
+            ${item.ref ? `<span class="href">${item.ref}</span>` : ''}
+          </div></li>`).join('')}
+        </ul>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function buildMawadi3List() {
+  const el = document.getElementById('mawadi3-list');
+  el.innerHTML = ADAB_DATA.mawadi3.map(m => `
+    <div class="ic">
+      <div class="ich${m.open ? ' open' : ''}" onclick="togIC(this)">${m.icon} ${m.title}<span class="ica"${m.open ? ' style="transform:rotate(180deg);opacity:1"' : ''}>▼</span></div>
+      <div class="icb${m.open ? ' open' : ''}">
+        ${m.qref ? `<span class="qref">${m.qref}</span><span class="href">${m.ref}</span>` : ''}
+        ${m.body ? `<p class="note-p"${m.qref ? ' style="margin-top:10px"' : ''}>${m.body}</p>` : ''}
+        ${m.ref && !m.qref ? `<span class="href">${m.ref}</span>` : ''}
+        ${m.note ? `<p class="note-p" style="margin-top:10px;font-size:.88rem;color:#6b5838;">${m.note}</p>` : ''}
+        ${m.refExtra ? `<span class="href">${m.refExtra}</span>` : ''}
+        ${m.tipsTitle ? `<div class="sub-h" style="margin-top:14px">${m.tipsTitle}</div>` : ''}
+        ${m.tips ? `<ul class="tips-list">${m.tips.map(t => `<li>${t}</li>`).join('')}</ul>` : ''}
+      </div>
+    </div>
+  `).join('');
+}
+
+function togIC(hdr) {
+  const body = hdr.nextElementSibling;
+  const open = hdr.classList.contains('open');
+  hdr.classList.toggle('open', !open);
+  body.classList.toggle('open', !open);
+}
+
+// ══════════════════════════════════════
+// INIT
+// ══════════════════════════════════════
+initAll();
+</script>
+</body>
+</html>

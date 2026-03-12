@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>خريطة الأذكار</title>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Scheherazade+New:wght@400;700&family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ─── VARS ─── */
+:root {
+  --bg:#07090f; --panel:#0b0f1a; --gold:#c9a84c; --gold2:#e8c96a;
+  --teal:#2dd4bf; --teal2:#14b8a6;
+  --text:#ede8d8; --dim:rgba(237,232,216,.45); --border:rgba(201,168,76,.15);
+}
+*,*::before,*::after { margin:0; padding:0; box-sizing:border-box; }
+html,body { height:100%; overflow:hidden; }
+body { background:var(--bg); color:var(--text); font-family:'Tajawal',sans-serif; }
+
+/* ─── TOP BAR ─── */
+#topbar {
+  height:46px; flex-shrink:0;
+  background:rgba(11,15,26,.98);
+  border-bottom:1px solid var(--border);
+  display:flex; align-items:center; padding:0 18px; gap:10px; z-index:30;
+}
+.pulse { width:6px;height:6px;border-radius:50%;background:var(--teal);box-shadow:0 0 7px var(--teal);animation:blink 2.4s infinite;flex-shrink:0; }
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+.tb-title { font-family:'Amiri',serif;font-size:1.05rem;color:var(--gold2); }
+.tb-sub   { font-size:.72rem;color:var(--dim); }
+.tb-prog  { margin-right:auto;display:flex;align-items:center;gap:8px; }
+.tb-ptxt  { font-size:.7rem;color:var(--dim); }
+.tb-pout  { width:100px;height:3.5px;background:rgba(255,255,255,.08);border-radius:2px;overflow:hidden; }
+.tb-pin   { height:100%;background:linear-gradient(90deg,var(--teal2),var(--gold));transition:width .5s; }
+
+/* ─── ROOT LAYOUT ─── */
+#root {
+  display:flex;
+  height:calc(100vh - 46px);
+  overflow:hidden;
+}
+
+/* ══════════════════════════════
+   MAP PANEL
+══════════════════════════════ */
+#map-panel {
+  width:46%;
+  flex-shrink:0;
+  position:relative;
+  overflow:hidden;
+  border-left:1px solid var(--border);
+}
+
+/* ── Islamic geometric background ── */
+#map-panel::before {
+  content:'';
+  position:absolute; inset:0;
+  /* deep layered gradient — sky to earth */
+  background:
+    radial-gradient(ellipse at 50% -10%, rgba(26,60,90,.9) 0%, transparent 55%),
+    radial-gradient(ellipse at 20% 80%,  rgba(10,35,20,.8) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 90%,  rgba(15,25,45,.7) 0%, transparent 45%),
+    linear-gradient(180deg, #060c18 0%, #09130e 60%, #060c0a 100%);
+  pointer-events:none; z-index:0;
+}
+
+/* ── star field ── */
+#map-panel::after {
+  content:'';
+  position:absolute; inset:0; pointer-events:none; z-index:1;
+  background-image:
+    radial-gradient(1.5px 1.5px at  8% 10%, rgba(255,255,255,.7), transparent),
+    radial-gradient(1px   1px   at 22%  5%, rgba(255,255,255,.5), transparent),
+    radial-gradient(2px   2px   at 65%  8%, rgba(255,255,255,.6), transparent),
+    radial-gradient(1px   1px   at 85% 15%, rgba(255,255,255,.4), transparent),
+    radial-gradient(1.5px 1.5px at 45% 22%, rgba(255,255,255,.55),transparent),
+    radial-gradient(1px   1px   at 92% 30%, rgba(255,255,255,.35),transparent),
+    radial-gradient(1px   1px   at 12% 38%, rgba(255,255,255,.3), transparent),
+    radial-gradient(2px   2px   at 75% 35%, rgba(255,255,255,.5), transparent),
+    radial-gradient(1px   1px   at 30% 55%, rgba(255,255,255,.25),transparent),
+    radial-gradient(1.5px 1.5px at 58% 48%, rgba(255,255,255,.4), transparent),
+    radial-gradient(1px   1px   at  5% 62%, rgba(255,255,255,.3), transparent),
+    radial-gradient(1px   1px   at 95% 68%, rgba(255,255,255,.35),transparent);
+}
+
+/* ── moon glow (decorative) ── */
+.map-moon {
+  position:absolute; top:6%; left:50%; transform:translateX(-50%);
+  width:60px; height:60px; border-radius:50%;
+  background:radial-gradient(circle, rgba(232,201,106,.18) 0%, transparent 70%);
+  box-shadow: 0 0 40px rgba(232,201,106,.12), 0 0 80px rgba(232,201,106,.06);
+  z-index:2; pointer-events:none;
+  animation: moonPulse 4s ease infinite;
+}
+@keyframes moonPulse { 0%,100%{opacity:.7} 50%{opacity:1} }
+
+/* ── ground strip at bottom ── */
+.map-ground {
+  position:absolute; bottom:0; left:0; right:0; height:22%;
+  background:linear-gradient(180deg, transparent 0%, rgba(8,22,12,.8) 60%, rgba(5,15,8,1) 100%);
+  border-radius:50% 50% 0 0 / 20% 20% 0 0;
+  z-index:2; pointer-events:none;
+}
+
+#map-svg {
+  position:absolute; inset:0;
+  width:100%; height:100%;
+  cursor:grab; z-index:3;
+}
+#map-svg:active { cursor:grabbing; }
+
+.map-hints {
+  position:absolute; bottom:10px; left:10px;
+  display:flex; flex-direction:column; gap:4px;
+  z-index:10;
+}
+.map-hints span {
+  font-size:.6rem; color:rgba(237,232,216,.35);
+  background:rgba(5,8,14,.6); border-radius:5px; padding:2px 7px;
+}
+
+/* ══════════════════════════════
+   READER PANEL  — FIX: flex column with fixed sections
+══════════════════════════════ */
+#reader-panel {
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  background:var(--panel);
+  overflow:hidden;         /* nothing spills */
+  min-width:0;
+}
+
+/* WELCOME */
+#welcome {
+  flex:1;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  text-align:center; padding:32px 28px;
+  animation:fadeUp .5s ease both;
+}
+.w-moon  { font-size:3rem;margin-bottom:16px;filter:drop-shadow(0 0 14px rgba(201,168,76,.5)); }
+#welcome h2 { font-family:'Amiri',serif;font-size:1.5rem;color:var(--gold2);margin-bottom:8px; }
+#welcome p  { font-size:.86rem;color:var(--dim);line-height:1.9;max-width:280px; }
+.w-arrow { margin-top:24px;font-size:.76rem;color:var(--dim);animation:nudge 2s ease infinite; }
+@keyframes nudge{0%,100%{transform:translateX(0)}50%{transform:translateX(-6px)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+/* READER */
+#reader {
+  display:none;
+  flex-direction:column;
+  flex:1;
+  overflow:hidden;   /* critical — children handle their own scroll */
+  min-height:0;
+}
+#reader.on { display:flex; }
+
+/* ── Zone header — FIXED height ── */
+#zone-header {
+  flex-shrink:0;
+  padding:11px 18px 10px;
+  border-bottom:1px solid var(--border);
+  display:flex; align-items:center; gap:9px;
+  position:relative;
+}
+#zone-color-bar {
+  position:absolute; bottom:0; left:0; right:0;
+  height:2px; transition:background .4s,box-shadow .4s;
+}
+#zone-icon { font-size:1.35rem; line-height:1; }
+#zone-name { font-family:'Amiri',serif;font-size:1.15rem;line-height:1.2; }
+#zone-desc { font-size:.72rem;color:var(--dim);margin-top:1px; }
+#zone-tally {
+  margin-right:auto;font-size:.7rem;color:var(--dim);
+  background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.09);
+  border-radius:10px; padding:2px 9px; flex-shrink:0;
+}
+
+/* ── Dots — FIXED height ── */
+#dhikr-dots {
+  flex-shrink:0;
+  padding:8px 18px 5px;
+  display:flex; gap:6px; flex-wrap:wrap;
+}
+.d-dot {
+  width:24px; height:4px; border-radius:2px;
+  background:rgba(255,255,255,.1); cursor:pointer;
+  transition:background .25s,box-shadow .25s;
+}
+.d-dot.active { background:var(--zone-c,var(--gold));box-shadow:0 0 6px var(--zone-c,var(--gold)); }
+.d-dot.done   { background:var(--teal2); }
+
+/* ── Dhikr num — FIXED ── */
+#dhikr-num {
+  flex-shrink:0;
+  font-size:.68rem; color:var(--dim);
+  padding:4px 18px 2px;
+  letter-spacing:.05em;
+}
+
+/* ── Arabic text — SCROLLABLE, takes remaining space ── */
+#dhikr-text-wrap {
+  flex:1;                 /* take all remaining vertical space */
+  min-height:0;           /* allow shrinking */
+  overflow-y:auto;
+  padding:8px 18px 6px;
+  scrollbar-width:thin;
+  scrollbar-color:var(--border) transparent;
+}
+#dhikr-text-wrap::-webkit-scrollbar { width:3px; }
+#dhikr-text-wrap::-webkit-scrollbar-thumb { background:var(--border); }
+
+#dhikr-arabic {
+  font-family:'Scheherazade New',serif;
+  /* smaller size to avoid overflow on small screens */
+  font-size:clamp(1.1rem, 2.4vw, 1.65rem);
+  line-height:2.25;
+  color:#fff;
+  text-align:justify;
+  animation:textIn .3s ease both;
+}
+@keyframes textIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+#dhikr-src {
+  font-size:.72rem; color:var(--dim);
+  margin-top:10px; padding-top:8px;
+  border-top:1px dashed rgba(201,168,76,.14);
+  font-style:italic; line-height:1.6;
+}
+
+/* ── COUNTER ZONE — FIXED at bottom, never hidden ── */
+#counter-zone {
+  flex-shrink:0;                /* never compressed */
+  padding:10px 18px 14px;
+  background:rgba(7,9,15,.6);
+  border-top:1px solid var(--border);
+  display:flex; flex-direction:column; gap:9px;
+}
+
+/* progress row */
+#ctr-row {
+  display:flex; align-items:center; gap:8px;
+}
+#ctr-count {
+  font-family:'Amiri',serif;font-size:1.8rem;font-weight:700;
+  min-width:46px; text-align:center; color:var(--gold2);
+  transition:transform .12s,color .15s;
+}
+#ctr-count.bump { transform:scale(1.28);color:var(--teal); }
+#ctr-sep,#ctr-target { font-size:.78rem;color:var(--dim); }
+#ctr-bar-out { flex:1;height:5px;background:rgba(255,255,255,.07);border-radius:3px;overflow:hidden; }
+#ctr-bar-in  { height:100%;background:linear-gradient(90deg,var(--teal2),var(--gold));transition:width .22s;box-shadow:0 0 6px rgba(201,168,76,.35); }
+#ctr-chip    { font-size:.68rem;background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.2);border-radius:9px;padding:2px 9px;color:var(--gold);flex-shrink:0; }
+
+/* action buttons */
+#ctr-actions { display:flex;gap:8px; }
+#btn-tap {
+  flex:1; height:48px;
+  background:linear-gradient(135deg,var(--teal2),var(--teal));
+  border:none; border-radius:12px;
+  font-family:'Tajawal',sans-serif;font-size:.97rem;font-weight:700;color:#fff;
+  cursor:pointer; transition:transform .12s,box-shadow .12s;
+  box-shadow:0 3px 16px rgba(45,212,191,.28);
+  display:flex;align-items:center;justify-content:center;gap:6px;
+}
+#btn-tap:active { transform:scale(.96);box-shadow:none; }
+#btn-tap.complete { background:linear-gradient(135deg,#16a34a,#22c55e);box-shadow:0 3px 16px rgba(34,197,94,.28); }
+#btn-rst {
+  width:48px;height:48px;
+  background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);
+  border-radius:12px;color:var(--dim);font-size:.95rem;cursor:pointer;
+  transition:background .15s,color .15s;
+}
+#btn-rst:hover { background:rgba(255,255,255,.1);color:var(--text); }
+
+/* nav */
+#ctr-nav { display:flex;gap:7px; }
+.nav-btn {
+  flex:1;height:35px;
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);
+  border-radius:9px;color:var(--dim);
+  font-family:'Tajawal',sans-serif;font-size:.8rem;cursor:pointer;
+  transition:background .15s,color .15s;
+  display:flex;align-items:center;justify-content:center;gap:5px;
+}
+.nav-btn:hover { background:rgba(255,255,255,.08);color:var(--text); }
+.nav-btn:disabled { opacity:.3;cursor:default; }
+.nav-btn.nxt { border-color:rgba(201,168,76,.22);color:var(--gold); }
+.nav-btn.nxt:hover { background:rgba(201,168,76,.07); }
+
+/* zone complete */
+#zone-complete {
+  display:none; flex-shrink:0;
+  flex-direction:column;align-items:center;
+  padding:10px 18px 12px;gap:5px;text-align:center;
+  background:linear-gradient(180deg,transparent,rgba(20,184,166,.05));
+  border-top:1px solid rgba(20,184,166,.18);
+  animation:fadeUp .4s ease both;
+}
+#zone-complete.on { display:flex; }
+.zc-icon { font-size:1.6rem; }
+.zc-msg  { font-family:'Amiri',serif;font-size:1rem;color:var(--teal); }
+.zc-sub  { font-size:.72rem;color:var(--dim); }
+#btn-nz {
+  background:linear-gradient(135deg,var(--teal2),var(--teal));
+  border:none;border-radius:9px;padding:8px 20px;
+  font-family:'Tajawal',sans-serif;font-size:.84rem;font-weight:700;
+  color:#fff;cursor:pointer;margin-top:4px;
+}
+
+/* ══════════════════════════════
+   MOBILE
+══════════════════════════════ */
+@media (max-width:900px) {
+  /* stack vertically */
+  #root         { flex-direction: column; }
+
+  /* map: small fixed strip */
+  #map-panel    { width:100%; height:180px; flex-shrink:0;
+                  border-left:none; border-bottom:1px solid var(--border); }
+
+  /* when reader is active, shrink map even more */
+  #root.reading #map-panel { height:120px; }
+
+  /* reader: takes all remaining space — CRITICAL */
+  #reader-panel { flex:1; min-height:0; display:flex; flex-direction:column; overflow:hidden; }
+  #welcome      { flex:1; }
+  #reader       { flex:1; min-height:0; }
+
+  /* tighten paddings so counter is always visible */
+  #dhikr-arabic    { font-size:1rem; line-height:1.95; }
+  #zone-header     { padding:6px 13px; }
+  #dhikr-dots      { padding:4px 13px 2px; }
+  #dhikr-num       { padding:2px 13px; font-size:.62rem; }
+  #dhikr-text-wrap { padding:5px 13px; }
+  #counter-zone    { padding:8px 13px 12px; gap:7px; }
+  #ctr-row         { gap:7px; }
+  #ctr-count       { font-size:1.55rem; min-width:36px; }
+  #btn-tap         { height:44px; font-size:.92rem; }
+  #btn-rst         { width:44px; height:44px; }
+  #ctr-nav         { gap:5px; }
+  .nav-btn         { height:33px; font-size:.76rem; }
+  #zone-complete   { padding:6px 13px 8px; gap:4px; }
+  .zc-icon         { font-size:1.2rem; }
+  .zc-msg          { font-size:.88rem; }
+  .zc-sub          { font-size:.66rem; }
+  #btn-nz          { padding:7px 16px; font-size:.8rem; }
+}
+
+/* ── petals & toast ── */
+#petals { position:fixed;inset:0;pointer-events:none;z-index:60;overflow:hidden; }
+.petal  { position:absolute;animation:pfall linear forwards;opacity:0; }
+@keyframes pfall{0%{opacity:0;transform:translateY(-20px) rotate(0deg)}8%{opacity:.9}92%{opacity:.7}100%{opacity:0;transform:translateY(100vh) rotate(380deg)}}
+
+#toast {
+  position:fixed;top:58px;left:50%;
+  transform:translateX(-50%) translateY(-8px);
+  background:linear-gradient(135deg,var(--teal2),var(--teal));
+  color:#fff;border-radius:20px;padding:8px 20px;
+  font-size:.82rem;font-weight:700;
+  opacity:0;pointer-events:none;z-index:80;
+  transition:opacity .3s,transform .3s;white-space:nowrap;
+}
+#toast.on { opacity:1;transform:translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+
+<div id="petals"></div>
+<div id="toast"></div>
+
+<!-- TOP BAR -->
+<header id="topbar">
+  <div class="pulse"></div>
+  <span class="tb-title">خريطة الأذكار</span>
+  <span class="tb-sub">حصن المسلم</span>
+  <div class="tb-prog">
+    <span class="tb-ptxt" id="top-prog">٠ / ٧</span>
+    <div class="tb-pout"><div class="tb-pin" id="top-bar" style="width:0%"></div></div>
+  </div>
+</header>
+
+<!-- ROOT -->
+<div id="root">
+
+  <!-- MAP -->
+  <div id="map-panel">
+    <div class="map-moon"></div>
+    <div class="map-ground"></div>
+    <svg id="map-svg" xmlns="http://www.w3.org/2000/svg">
+      <defs id="svg-defs"></defs>
+      <g id="world"></g>
+    </svg>
+    <div class="map-hints">
+      <span>⟵ سحب للتنقل</span>
+      <span>⊕ عجلة للتكبير</span>
+    </div>
+  </div>
+
+  <!-- READER -->
+  <div id="reader-panel">
+
+    <div id="welcome">
+      <div class="w-moon">🌙</div>
+      <h2>أذكار الصباح والمساء</h2>
+      <p>اختر محطة من الخريطة للبدء — كل ذكر تكمله يضيء مساره</p>
+      <div class="w-arrow">← اختر محطة</div>
+    </div>
+
+    <div id="reader">
+      <!-- fixed header -->
+      <div id="zone-header">
+        <span id="zone-icon">🌅</span>
+        <div>
+          <div id="zone-name">الصباح</div>
+          <div id="zone-desc">بعد الفجر</div>
+        </div>
+        <div id="zone-tally">٠ / ٤</div>
+        <div id="zone-color-bar"></div>
+      </div>
+
+      <!-- fixed dots -->
+      <div id="dhikr-dots"></div>
+
+      <!-- fixed label -->
+      <div id="dhikr-num"></div>
+
+      <!-- SCROLLABLE text -->
+      <div id="dhikr-text-wrap">
+        <div id="dhikr-arabic"></div>
+        <div id="dhikr-src"></div>
+      </div>
+
+      <!-- FIXED counter — always visible -->
+      <div id="counter-zone">
+        <div id="ctr-row">
+          <span id="ctr-count">٠</span>
+          <span id="ctr-sep">/</span>
+          <span id="ctr-target">١</span>
+          <div id="ctr-bar-out"><div id="ctr-bar-in" style="width:0%"></div></div>
+          <span id="ctr-chip">مرة</span>
+        </div>
+        <div id="ctr-actions">
+          <button id="btn-tap" onclick="tapDhikr()">+١ &nbsp;اضغط للذكر</button>
+          <button id="btn-rst" title="إعادة" onclick="resetCurrent()">↺</button>
+        </div>
+        <div id="ctr-nav">
+          <button class="nav-btn" id="btn-prev" onclick="prevDhikr()">→ السابق</button>
+          <button class="nav-btn nxt" id="btn-next" onclick="nextDhikr()">التالي ←</button>
+        </div>
+      </div>
+
+      <!-- zone complete banner -->
+      <div id="zone-complete">
+        <div class="zc-icon">✨</div>
+        <div class="zc-msg" id="zc-msg">أتممت الأذكار!</div>
+        <div class="zc-sub">بارك الله فيك — المحطة أضاءت على الخريطة</div>
+        <button id="btn-nz" onclick="goNextZone()">المحطة التالية ←</button>
+      </div>
+    </div>
+
+  </div><!-- /reader-panel -->
+</div><!-- /root -->
+
+<script>
+'use strict';
+
+/* ── utils ── */
+const AR = n => String(Math.floor(n)).replace(/\d/g, d => '٠١٢٣٤٥٦٧٨٩'[d]);
+const ORD = ['الأول','الثاني','الثالث','الرابع','الخامس','السادس','السابع','الثامن','التاسع','العاشر'];
+const ord = i => ORD[i] || AR(i+1);
+
+/* ── DATA ── */
+const ZONES = [
+  { id:'sobh', label:'الصباح', icon:'🌅', color:'#2dd4bf', desc:'تُقال بعد صلاة الفجر',
+    items:[
+      {t:'أَعُوذُ بِاللَّهِ مِنَ الشَّيطَانِ الرَّجِيمِ ﴿اللَّهُ لَا إِلَهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ لَا تَأْخُذُهُ سِنَةٌ وَلَا نَوْمٌ لَّهُ مَا فِي السَّمَوَاتِ وَمَا فِي الأَرْضِ مَن ذَا الَّذِي يَشْفَعُ عِنْدَهُ إِلَّا بِإِذْنِهِ يَعْلَمُ مَا بَيْنَ أَيْدِيهِمْ وَمَا خَلْفَهُمْ وَلَا يُحِيطُونَ بِشَيْءٍ مِّنْ عِلْمِهِ إِلَّا بِمَا شَاءَ وَسِعَ كُرْسِيُّهُ السَّمَوَاتِ وَالأَرْضَ وَلَا يَؤُودُهُ حِفْظُهُمَا وَهُوَ الْعَلِيُّ الْعَظِيمُ﴾', chip:'مرة', target:1, src:'رواه أبو داود — من قالها صباحاً حُفظ حتى يُمسي'},
+      {t:'أَصْبَحْنَا وَأَصْبَحَ الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ، رَبِّ أَسْأَلُكَ خَيْرَ مَا فِي هَذَا الْيَوْمِ وَخَيرَ مَا بَعْدَهُ', chip:'مرة', target:1, src:'رواه مسلم'},
+      {t:'اللَّهُمَّ بِكَ أَصْبَحْنَا، وَبِكَ أَمْسَيْنَا، وَبِكَ نَحْيَا، وَبِكَ نَمُوتُ وَإِلَيْكَ النُّشُورُ', chip:'مرة', target:1, src:'رواه الترمذي'},
+      {t:'اللَّهُمَّ إِنِّي أَصْبَحْتُ أُشْهِدُكَ، وَأُشْهِدُ حَمَلَةَ عَرْشِكَ، وَمَلَائِكَتَكَ، وَجَمِيعَ خَلْقِكَ، أَنَّكَ أَنْتَ اللَّهُ لَا إِلَهَ إِلَّا أَنْتَ وَحْدَكَ لَا شَرِيكَ لَكَ، وَأَنَّ مُحَمَّداً عَبْدُكَ وَرَسُولُكَ', chip:'٤ مرات', target:4, src:'رواه أبو داود — أعتق الله ربعه من النار'},
+      {t:'اللَّهُمَّ مَا أَصْبَحَ بِي مِنْ نِعْمَةٍ أَوْ بِأَحَدٍ مِنْ خَلْقِكَ فَمِنْكَ وَحْدَكَ لَا شَرِيكَ لَكَ، فَلَكَ الْحَمْدُ وَلَكَ الشُّكْرُ', chip:'مرة', target:1, src:'رواه أبو داود — من قالها فقد أدى شكر يومه'},
+      {t:'اللَّهُمَّ عَافِنِي فِي بَدَنِي، اللَّهُمَّ عَافِنِي فِي سَمْعِي، اللَّهُمَّ عَافِنِي فِي بَصَرِي، لَا إِلَهَ إِلَّا أَنْتَ', chip:'٣ مرات', target:3, src:'رواه أبو داود'},
+      {t:'اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْكُفْرِ، وَالفَقْرِ، وَأَعُوذُ بِكَ مِنْ عَذَابِ القَبْرِ، لَا إِلَهَ إِلَّا أَنْتَ', chip:'٣ مرات', target:3, src:'رواه أبو داود'},
+    ]
+  },
+  { id:'masa', label:'المساء', icon:'🌆', color:'#f59e0b', desc:'تُقال بعد صلاة العصر',
+    items:[
+      {t:'أَمْسَيْنَا وَأَمْسَى الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ', chip:'مرة', target:1, src:'رواه مسلم'},
+      {t:'اللَّهُمَّ بِكَ أَمْسَيْنَا، وَبِكَ أَصْبَحْنَا، وَبِكَ نَحْيَا، وَبِكَ نَمُوتُ وَإِلَيْكَ الْمَصِيرُ', chip:'مرة', target:1, src:'رواه الترمذي'},
+      {t:'اللَّهُمَّ إِنِّي أَمْسَيْتُ أُشْهِدُكَ، وَأُشْهِدُ حَمَلَةَ عَرْشِكَ، وَمَلَائِكَتَكَ، وَجَمِيعَ خَلْقِكَ، أَنَّكَ أَنْتَ اللَّهُ لَا إِلَهَ إِلَّا أَنْتَ وَحْدَكَ لَا شَرِيكَ لَكَ', chip:'٤ مرات', target:4, src:'رواه أبو داود'},
+      {t:'أَعُوذُ بِكَلِمَاتِ اللَّهِ التَّامَّاتِ مِنْ شَرِّ مَا خَلَقَ', chip:'٣ مرات', target:3, src:'رواه مسلم — لم يضره شيء تلك الليلة'},
+    ]
+  },
+  { id:'himaya', label:'الحماية', icon:'🛡️', color:'#8b5cf6', desc:'تحصين من الشر',
+    items:[
+      {t:'بِسْمِ اللَّهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الْأَرْضِ وَلَا فِي السَّمَاءِ وَهُوَ السَّمِيعُ الْعَلِيمُ', chip:'٣ مرات', target:3, src:'رواه أبو داود والترمذي — لم يضره شيء'},
+      {t:'اللَّهُمَّ احْفَظْنِي مِنْ بَيْنِ يَدَيَّ، وَمِنْ خَلْفِي، وَعَنْ يَمِينِي، وَعَنْ شِمَالِي، وَمِنْ فَوْقِي، وَأَعُوذُ بِعَظَمَتِكَ أَنْ أُغْتَالَ مِنْ تَحْتِي', chip:'مرة', target:1, src:'رواه أبو داود'},
+      {t:'اللَّهُمَّ عَالِمَ الْغَيْبِ وَالشَّهَادَةِ فَاطِرَ السَّمَوَاتِ وَالأَرْضِ، رَبَّ كُلِّ شَيْءٍ وَمَلِيكَهُ، أَشْهَدُ أَنْ لَا إِلَهَ إِلَّا أَنْتَ، أَعُوذُ بِكَ مِنْ شَرِّ نَفْسِي وَمِنْ شَرِّ الشَّيْطَانِ وَشِرْكِهِ', chip:'مرة', target:1, src:'رواه أبو داود والترمذي'},
+    ]
+  },
+  { id:'istighfar', label:'الاستغفار', icon:'🌿', color:'#f43f5e', desc:'سيد الاستغفار',
+    items:[
+      {t:'اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَهَ إِلَّا أَنْتَ، خَلَقْتَنِي وَأَنَا عَبْدُكَ، وَأَنَا عَلَى عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ، أَعُوذُ بِكَ مِنْ شَرِّ مَا صَنَعْتُ، أَبُوءُ لَكَ بِنِعْمَتِكَ عَلَيَّ، وَأَبُوءُ بِذَنْبِي فَاغْفِرْ لِي فَإِنَّهُ لَا يَغْفِرُ الذُّنُوبَ إِلَّا أَنْتَ', chip:'مرة', target:1, src:'رواه البخاري — سيد الاستغفار'},
+      {t:'أَسْتَغْفِرُ اللَّهَ وَأَتُوبُ إِلَيْهِ', chip:'١٠٠ مرة', target:100, src:'رواه البخاري ومسلم'},
+    ]
+  },
+  { id:'tawhid', label:'التوحيد', icon:'☀️', color:'#22d3ee', desc:'أفضل ما قاله العبد',
+    items:[
+      {t:'لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ', chip:'١٠ مرات', target:10, src:'رواه البخاري ومسلم — كانت له عدل عشر رقاب'},
+      {t:'سُبْحَانَ اللَّهِ وَبِحَمْدِهِ', chip:'١٠٠ مرة', target:100, src:'رواه البخاري ومسلم — حُطَّت خطاياه وإن كانت مثل زبد البحر'},
+      {t:'سُبْحَانَ اللَّهِ وَبِحَمْدِهِ عَدَدَ خَلْقِهِ، وَرِضَا نَفْسِهِ، وَزِنَةَ عَرْشِهِ، وَمِدَادَ كَلِمَاتِهِ', chip:'٣ مرات', target:3, src:'رواه مسلم'},
+    ]
+  },
+  { id:'tawakkul', label:'التوكل', icon:'💎', color:'#84cc16', desc:'توكل على الله',
+    items:[
+      {t:'حَسْبِيَ اللَّهُ لَا إِلَهَ إِلَّا هُوَ عَلَيْهِ تَوَكَّلْتُ وَهُوَ رَبُّ الْعَرْشِ الْعَظِيمِ', chip:'٧ مرات', target:7, src:'رواه أبو داود — كفاه الله ما أهمه'},
+      {t:'يَا حَيُّ يَا قَيُّومُ بِرَحْمَتِكَ أَسْتَغِيثُ، أَصْلِحْ لِي شَأْنِي كُلَّهُ وَلَا تَكِلْنِي إِلَى نَفْسِي طَرْفَةَ عَيْنٍ', chip:'مرة', target:1, src:'رواه النسائي'},
+      {t:'رَضِيتُ بِاللَّهِ رَبًّا، وَبِالْإِسْلَامِ دِينًا، وَبِمُحَمَّدٍ ﷺ نَبِيًّا', chip:'٣ مرات', target:3, src:'رواه أبو داود — حق على الله أن يرضيه'},
+    ]
+  },
+  { id:'quran', label:'المعوذات', icon:'📖', color:'#f97316', desc:'المعوذات ثلاث مرات',
+    items:[
+      {t:'بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ ﴿قُلْ هُوَ اللَّهُ أَحَدٌ * اللَّهُ الصَّمَدُ * لَمْ يَلِدْ وَلَمْ يُولَدْ * وَلَمْ يَكُن لَّهُ كُفُوًا أَحَدٌ﴾', chip:'٣ مرات', target:3, src:'رواه أبو داود'},
+      {t:'بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ ﴿قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ * مِن شَرِّ مَا خَلَقَ * وَمِن شَرِّ غَاسِقٍ إِذَا وَقَبَ * وَمِن شَرِّ النَّفَّاثَاتِ فِي الْعُقَدِ * وَمِن شَرِّ حَاسِدٍ إِذَا حَسَدَ﴾', chip:'٣ مرات', target:3, src:'رواه أبو داود'},
+      {t:'بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ ﴿قُلْ أَعُوذُ بِرَبِّ النَّاسِ * مَلِكِ النَّاسِ * إِلَهِ النَّاسِ * مِن شَرِّ الْوَسْوَاسِ الْخَنَّاسِ * الَّذِي يُوَسْوِسُ فِي صُدُورِ النَّاسِ * مِنَ الْجِنَّةِ وَالنَّاسِ﴾', chip:'٣ مرات', target:3, src:'رواه أبو داود'},
+    ]
+  },
+];
+
+const IDS = ZONES.map(z => z.id);
+const ctrs = {}, zDone = {};
+let selZone = null, selIdx = 0;
+
+/* ══ SVG MAP ══ */
+const NS = 'http://www.w3.org/2000/svg';
+const mk = (tag, a={}) => { const e = document.createElementNS(NS,tag); Object.entries(a).forEach(([k,v])=>e.setAttribute(k,v)); return e; };
+
+/* positions as ratios — winding path top→bottom */
+const OFFSETS = [
+  {rx:.24,ry:.13}, // sobh
+  {rx:.74,ry:.24}, // masa
+  {rx:.20,ry:.40}, // himaya
+  {rx:.76,ry:.52}, // istighfar
+  {rx:.28,ry:.66}, // tawhid
+  {rx:.72,ry:.76}, // tawakkul
+  {rx:.48,ry:.89}, // quran
+];
+
+let mW=0, mH=0, panX=0, panY=0, zoom=1;
+const npos = i => ({ x: OFFSETS[i].rx*mW, y: OFFSETS[i].ry*mH });
+
+function buildMap() {
+  const svg   = document.getElementById('map-svg');
+  const world = document.getElementById('world');
+  const defs  = document.getElementById('svg-defs');
+  world.innerHTML = ''; defs.innerHTML = '';
+  mW = svg.clientWidth||400; mH = svg.clientHeight||500;
+  svg.setAttribute('viewBox',`0 0 ${mW} ${mH}`);
+
+  /* glow filters */
+  ZONES.forEach(z => {
+    const f = mk('filter',{id:`gf-${z.id}`,x:'-80%',y:'-80%',width:'260%',height:'260%'});
+    const b = mk('feGaussianBlur',{in:'SourceGraphic',stdDeviation:'6',result:'b'});
+    const m = mk('feMerge');
+    ['b','SourceGraphic'].forEach(n=>{m.appendChild(mk('feMergeNode',{in:n}));});
+    f.appendChild(b); f.appendChild(m); defs.appendChild(f);
+  });
+
+  /* path */
+  const pg = mk('g');
+  for (let i=0;i<ZONES.length-1;i++) {
+    const a=npos(i), b=npos(i+1);
+    const cx=(a.x+b.x)/2+18, cy=(a.y+b.y)/2;
+    const d=`M${a.x},${a.y} Q${cx},${cy} ${b.x},${b.y}`;
+    pg.appendChild(mk('path',{d,fill:'none',stroke:'rgba(201,168,76,.08)','stroke-width':'8','stroke-linecap':'round'}));
+    pg.appendChild(mk('path',{d,id:`ps-${i}`,fill:'none',stroke:'rgba(201,168,76,.22)','stroke-width':'1.5','stroke-dasharray':'5 7','stroke-linecap':'round'}));
+  }
+  world.appendChild(pg);
+
+  /* nodes */
+  const ng = mk('g');
+  ZONES.forEach((z,i)=>{
+    const {x,y}=npos(i); const c=z.color; const r=28;
+    const done=!!zDone[z.id], isSel=selZone===z.id;
+    const g=mk('g',{id:`ng-${z.id}`,style:'cursor:pointer'});
+
+    g.appendChild(mk('circle',{cx:x,cy:y,r:r+14,fill:c,opacity:isSel?'.16':'.04',id:`hl-${z.id}`,filter:`url(#gf-${z.id})`}));
+    g.appendChild(mk('circle',{cx:x,cy:y,r,fill:done?c+'18':(isSel?c+'12':'#09120a'),stroke:c,'stroke-width':isSel?'2.8':done?'2.2':'1.4',id:`ci-${z.id}`,filter:`url(#gf-${z.id})`}));
+
+    /* arc */
+    const pct=zonePct(z.id);
+    if(pct>0){ g.appendChild(makeArc(z.id,x,y,r,c,pct)); }
+
+    const ico=mk('text',{x,y:y-5,'text-anchor':'middle','dominant-baseline':'middle','font-size':'14',id:`ii-${z.id}`});
+    ico.textContent=z.icon; g.appendChild(ico);
+
+    const lbl=mk('text',{x,y:y+12,'text-anchor':'middle','dominant-baseline':'middle','font-family':'Tajawal,sans-serif','font-size':'9.5','font-weight':'700',fill:isSel?'#fff':c,id:`ll-${z.id}`});
+    lbl.textContent=z.label; g.appendChild(lbl);
+
+    if(done){const ck=mk('text',{x:x+r-2,y:y-r+4,'text-anchor':'middle','dominant-baseline':'middle','font-size':'9',fill:c});ck.textContent='✓';g.appendChild(ck);}
+
+    g.addEventListener('click',()=>selectZone(z.id));
+    g.addEventListener('mouseenter',()=>{
+      document.getElementById(`hl-${z.id}`).setAttribute('opacity','.14');
+      document.getElementById(`ci-${z.id}`).setAttribute('stroke-width','3');
+    });
+    g.addEventListener('mouseleave',()=>{
+      if(selZone!==z.id){
+        document.getElementById(`hl-${z.id}`).setAttribute('opacity',zDone[z.id]?'.09':'.04');
+        document.getElementById(`ci-${z.id}`).setAttribute('stroke-width',zDone[z.id]?'2.2':'1.4');
+      }
+    });
+    ng.appendChild(g);
+  });
+  world.appendChild(ng);
+  applyT();
+}
+
+function makeArc(zid,x,y,r,c,pct) {
+  if(pct>=1) return mk('circle',{cx:x,cy:y,r,fill:'none',stroke:c,'stroke-width':'3',id:`arc-${zid}`});
+  const ang=pct*2*Math.PI-Math.PI/2;
+  return mk('path',{
+    d:`M${x},${y-r} A${r},${r} 0 ${pct>.5?1:0},1 ${(x+r*Math.cos(ang)).toFixed(2)},${(y+r*Math.sin(ang)).toFixed(2)}`,
+    fill:'none',stroke:c,'stroke-width':'3','stroke-linecap':'round',id:`arc-${zid}`
+  });
+}
+
+function applyT() { document.getElementById('world').setAttribute('transform',`translate(${panX},${panY}) scale(${zoom})`); }
+
+function refreshNode(zid) {
+  const z=ZONES.find(v=>v.id===zid), i=IDS.indexOf(zid);
+  if(!z)return;
+  const {x,y}=npos(i), c=z.color, r=28;
+  const done=!!zDone[zid], isSel=selZone===zid;
+  const ci=document.getElementById(`ci-${zid}`);
+  if(ci){ ci.setAttribute('fill',done?c+'18':(isSel?c+'12':'#09120a')); ci.setAttribute('stroke-width',isSel?'2.8':done?'2.2':'1.4'); }
+  const hl=document.getElementById(`hl-${zid}`);
+  if(hl) hl.setAttribute('opacity',isSel?'.16':done?'.09':'.04');
+  const ll=document.getElementById(`ll-${zid}`);
+  if(ll) ll.setAttribute('fill',isSel?'#fff':c);
+  const old=document.getElementById(`arc-${zid}`); if(old)old.remove();
+  const pct=zonePct(zid);
+  if(pct>0){
+    const g=document.getElementById(`ng-${zid}`);
+    const arcEl=makeArc(zid,x,y,r,c,pct);
+    const ico=document.getElementById(`ii-${zid}`);
+    if(g&&ico) g.insertBefore(arcEl,ico);
+  }
+}
+
+/* pan/zoom */
+const svg=document.getElementById('map-svg');
+let drag=false,dx0=0,dy0=0;
+svg.addEventListener('mousedown',e=>{if(e.target.closest('[id^=ng-]'))return;drag=true;dx0=e.clientX-panX;dy0=e.clientY-panY;});
+window.addEventListener('mousemove',e=>{if(!drag)return;panX=e.clientX-dx0;panY=e.clientY-dy0;applyT();});
+window.addEventListener('mouseup',()=>drag=false);
+svg.addEventListener('wheel',e=>{e.preventDefault();zoom=Math.max(.3,Math.min(2.6,zoom*(e.deltaY<0?1.09:.92)));applyT();},{passive:false});
+let td=false,tdx=0,tdy=0;
+svg.addEventListener('touchstart',e=>{if(e.touches.length===1&&!e.target.closest('[id^=ng-]')){td=true;tdx=e.touches[0].clientX-panX;tdy=e.touches[0].clientY-panY;}},{passive:true});
+svg.addEventListener('touchmove',e=>{if(td&&e.touches.length===1){panX=e.touches[0].clientX-tdx;panY=e.touches[0].clientY-tdy;applyT();}},{passive:true});
+svg.addEventListener('touchend',()=>td=false);
+
+/* ── helpers ── */
+function zonePct(zid){
+  const z=ZONES.find(v=>v.id===zid); if(!z||!z.items.length)return 0;
+  let tot=0,dn=0;
+  z.items.forEach((it,i)=>{const k=`${zid}_${i}`;const c=ctrs[k];tot+=(it.target||1);dn+=c?Math.min(c.cnt,c.target):0;});
+  return dn/tot;
+}
+function updateTopBar(){
+  const d=ZONES.filter(z=>zDone[z.id]).length;
+  document.getElementById('top-prog').textContent=`${AR(d)} / ${AR(ZONES.length)}`;
+  document.getElementById('top-bar').style.width=(d/ZONES.length*100)+'%';
+}
+
+/* ── SELECT ZONE ── */
+function selectZone(zid,idx) {
+  if(selZone&&selZone!==zid) refreshNode(selZone);
+  selZone=zid; selIdx=idx||0;
+  refreshNode(zid);
+  document.getElementById('welcome').style.display='none';
+  document.getElementById('reader').classList.add('on');
+  document.getElementById('root').classList.add('reading');
+  renderHeader(); renderDots(); renderDhikr();
+}
+
+function renderHeader(){
+  const z=ZONES.find(v=>v.id===selZone);
+  document.getElementById('zone-icon').textContent=z.icon;
+  document.getElementById('zone-name').textContent=z.label;
+  document.getElementById('zone-desc').textContent=z.desc;
+  const cb=document.getElementById('zone-color-bar');
+  cb.style.background=z.color; cb.style.boxShadow=`0 0 10px ${z.color}`;
+  const dn=z.items.filter((_,i)=>{const k=`${selZone}_${i}`;return ctrs[k]&&ctrs[k].cnt>=ctrs[k].target;}).length;
+  document.getElementById('zone-tally').textContent=`${AR(dn)} / ${AR(z.items.length)}`;
+  const all=dn===z.items.length;
+  document.getElementById('zone-complete').classList.toggle('on',all);
+  document.getElementById('zc-msg').textContent=`أتممت أذكار ${z.label}!`;
+}
+
+function renderDots(){
+  const z=ZONES.find(v=>v.id===selZone);
+  document.getElementById('dhikr-dots').innerHTML=z.items.map((it,i)=>{
+    const k=`${selZone}_${i}`;
+    const dn=ctrs[k]&&ctrs[k].cnt>=ctrs[k].target;
+    return `<div class="d-dot${i===selIdx?' active':''}${dn?' done':''}" style="--zone-c:${z.color}" onclick="jumpTo(${i})"></div>`;
+  }).join('');
+}
+
+function jumpTo(i){selIdx=i;renderDots();renderDhikr();}
+
+function renderDhikr(){
+  const z=ZONES.find(v=>v.id===selZone), it=z.items[selIdx]; if(!it)return;
+  const k=`${selZone}_${selIdx}`;
+  if(!ctrs[k])ctrs[k]={cnt:0,target:it.target||1};
+  const {cnt,target}=ctrs[k];
+  document.getElementById('dhikr-num').textContent=`الذكر ${ord(selIdx)} من ${AR(z.items.length)}`;
+  const ta=document.getElementById('dhikr-arabic');
+  ta.style.animation='none'; void ta.offsetWidth; ta.style.animation='';
+  ta.textContent=it.t;
+  document.getElementById('dhikr-src').textContent=it.src||'';
+  updateCUI(cnt,target,it.chip);
+  document.getElementById('btn-prev').disabled=selIdx===0;
+  document.getElementById('btn-next').disabled=selIdx===z.items.length-1;
+  document.getElementById('dhikr-text-wrap').scrollTop=0;
+}
+
+function updateCUI(cnt,target,chip){
+  document.getElementById('ctr-count').textContent=AR(cnt);
+  document.getElementById('ctr-target').textContent=AR(target);
+  document.getElementById('ctr-chip').textContent=chip||'مرة';
+  document.getElementById('ctr-bar-in').style.width=Math.min(cnt/target*100,100)+'%';
+  const done=cnt>=target;
+  const btn=document.getElementById('btn-tap');
+  btn.classList.toggle('complete',done);
+  btn.innerHTML=done?'✓ &nbsp;اكتمل — التالي؟':'+١ &nbsp;اضغط للذكر';
+}
+
+function tapDhikr(){
+  const z=ZONES.find(v=>v.id===selZone), it=z.items[selIdx];
+  const k=`${selZone}_${selIdx}`;
+  if(!ctrs[k])ctrs[k]={cnt:0,target:it.target||1};
+  if(ctrs[k].cnt>=ctrs[k].target){nextDhikr();return;}
+  ctrs[k].cnt++;
+  const {cnt,target}=ctrs[k];
+  const ce=document.getElementById('ctr-count');
+  ce.textContent=AR(cnt); ce.classList.add('bump'); setTimeout(()=>ce.classList.remove('bump'),130);
+  updateCUI(cnt,target,it.chip);
+  if(cnt>=target){
+    renderDots();
+    const dn=z.items.filter((_,i)=>{const k=`${selZone}_${i}`;return ctrs[k]&&ctrs[k].cnt>=ctrs[k].target;}).length;
+    document.getElementById('zone-tally').textContent=`${AR(dn)} / ${AR(z.items.length)}`;
+    refreshNode(selZone);
+    checkZoneDone();
+    if(selIdx<z.items.length-1) setTimeout(nextDhikr,550);
+  }
+}
+
+function checkZoneDone(){
+  const z=ZONES.find(v=>v.id===selZone);
+  const all=z.items.every((_,i)=>{const k=`${selZone}_${i}`;return ctrs[k]&&ctrs[k].cnt>=ctrs[k].target;});
+  if(all&&!zDone[selZone]){
+    zDone[selZone]=true;
+    showToast(`✨ أتممت أذكار ${z.label}!`);
+    burst();
+    document.getElementById('zone-complete').classList.add('on');
+    document.getElementById('zc-msg').textContent=`أتممت أذكار ${z.label}!`;
+    refreshNode(selZone); updateTopBar();
+  }
+}
+
+function nextDhikr(){const z=ZONES.find(v=>v.id===selZone);if(selIdx<z.items.length-1){selIdx++;renderDots();renderDhikr();}}
+function prevDhikr(){if(selIdx>0){selIdx--;renderDots();renderDhikr();}}
+function resetCurrent(){
+  const z=ZONES.find(v=>v.id===selZone),it=z.items[selIdx];
+  const k=`${selZone}_${selIdx}`;
+  ctrs[k]={cnt:0,target:it.target||1};
+  if(zDone[selZone]){zDone[selZone]=false;document.getElementById('zone-complete').classList.remove('on');updateTopBar();}
+  renderDots();renderDhikr();refreshNode(selZone);
+}
+function goNextZone(){const i=IDS.indexOf(selZone);if(i<ZONES.length-1)selectZone(IDS[i+1]);}
+
+/* petals */
+function burst(){
+  const wrap=document.getElementById('petals');
+  const em=['🌸','✨','🌺','💫','🌼','⭐','🌟'];
+  for(let i=0;i<14;i++){
+    const p=document.createElement('div'); p.className='petal';
+    p.textContent=em[Math.floor(Math.random()*em.length)];
+    const dur=2.2+Math.random()*2.5;
+    p.style.cssText=`left:${8+Math.random()*84}%;top:-20px;font-size:${.9+Math.random()*.9}rem;animation-name:pfall;animation-duration:${dur}s;animation-delay:${i*.07}s;`;
+    wrap.appendChild(p); setTimeout(()=>p.remove(),(dur+1.2)*1000);
+  }
+}
+
+let tt=null;
+function showToast(msg){
+  const t=document.getElementById('toast');t.textContent=msg;t.classList.add('on');
+  clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('on'),2800);
+}
+
+/* init */
+window.addEventListener('load',()=>{
+  buildMap();
+  window.addEventListener('resize',()=>{
+    document.getElementById('world').innerHTML='';
+    document.getElementById('svg-defs').innerHTML='';
+    buildMap();
+  });
+});
+</script>
+</body>
+</html>
