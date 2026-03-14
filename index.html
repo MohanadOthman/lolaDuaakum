@@ -657,7 +657,75 @@ function toggleTheme() {
 // STATE
 // ══════════════════════════════════════════════════
 let DUAS = null, ADKAR = null, ADAB_DATA = null;
-let HISN_INDEX = null;
+const HISN_INDEX = [
+  {ID:27,TITLE:"أذكار الصباح والمساء"},{ID:28,TITLE:"أذكار النوم"},
+  {ID:1,TITLE:"أذكار الاستيقاظ من النوم"},{ID:6,TITLE:"دعاء دخول الخلاء"},
+  {ID:7,TITLE:"دعاء الخروج من الخلاء"},{ID:8,TITLE:"الذكر قبل الوضوء"},
+  {ID:9,TITLE:"الذكر بعد الفراغ من الوضوء"},{ID:10,TITLE:"الذكر عند الخروج من المنزل"},
+  {ID:11,TITLE:"الذكر عند دخول المنزل"},{ID:12,TITLE:"دعاء الذهاب إلى المسجد"},
+  {ID:13,TITLE:"دعاء دخول المسجد"},{ID:14,TITLE:"دعاء الخروج من المسجد"},
+  {ID:15,TITLE:"أذكار الآذان"},{ID:2,TITLE:"دعاء لبس الثوب"},
+  {ID:3,TITLE:"دعاء لبس الثوب الجديد"},{ID:4,TITLE:"الدعاء لمن لبس ثوبا جديدا"},
+  {ID:5,TITLE:"ما يقول إذا وضع ثوبه"},{ID:16,TITLE:"دعاء الاستفتاح"},
+  {ID:17,TITLE:"دعاء الركوع"},{ID:18,TITLE:"دعاء الرفع من الركوع"},
+  {ID:19,TITLE:"دعاء السجود"},{ID:20,TITLE:"دعاء الجلسة بين السجدتين"},
+  {ID:21,TITLE:"دعاء سجود التلاوة"},{ID:22,TITLE:"التشهد"},
+  {ID:23,TITLE:"الصلاة على النبي بعد التشهد"},{ID:24,TITLE:"الدعاء بعد التشهد الأخير قبل السلام"},
+  {ID:25,TITLE:"الأذكار بعد السلام من الصلاة"},{ID:26,TITLE:"دعاء صلاة الاستخارة"},
+  {ID:29,TITLE:"الدعاء إذا تقلب ليلا"},{ID:30,TITLE:"دعاء الفزع في النوم"},
+  {ID:31,TITLE:"ما يفعل من رأى الرؤيا أو الحلم"},{ID:32,TITLE:"دعاء قنوت الوتر"},
+  {ID:33,TITLE:"الذكر عقب السلام من الوتر"},{ID:34,TITLE:"دعاء الهم والحزن"},
+  {ID:35,TITLE:"دعاء الكرب"},{ID:36,TITLE:"دعاء لقاء العدو وذي السلطان"},
+  {ID:37,TITLE:"دعاء من خاف ظلم السلطان"},{ID:38,TITLE:"الدعاء على العدو"},
+  {ID:39,TITLE:"ما يقول من خاف قوما"},{ID:40,TITLE:"دعاء من أصابه وسوسة في الإيمان"},
+  {ID:41,TITLE:"دعاء قضاء الدين"},{ID:42,TITLE:"دعاء الوسوسة في الصلاة والقراءة"},
+  {ID:43,TITLE:"دعاء من استصعب عليه أمر"},{ID:44,TITLE:"ما يقول ويفعل من أذنب ذنبا"},
+  {ID:45,TITLE:"دعاء طرد الشيطان ووساوسه"},{ID:46,TITLE:"الدعاء حينما يقع ما لا يرضاه"},
+  {ID:47,TITLE:"تهنئة المولود له وجوابه"},{ID:48,TITLE:"ما يعوذ به الأولاد"},
+  {ID:49,TITLE:"الدعاء للمريض في عيادته"},{ID:50,TITLE:"فضل عيادة المريض"},
+  {ID:51,TITLE:"دعاء المريض الذي يئس من حياته"},{ID:52,TITLE:"تلقين المحتضر"},
+  {ID:53,TITLE:"دعاء من أصيب بمصيبة"},{ID:54,TITLE:"الدعاء عند إغماض الميت"},
+  {ID:55,TITLE:"الدعاء للميت في الصلاة عليه"},{ID:56,TITLE:"الدعاء للفرط في الصلاة عليه"},
+  {ID:57,TITLE:"دعاء التعزية"},{ID:58,TITLE:"الدعاء عند إدخال الميت القبر"},
+  {ID:59,TITLE:"الدعاء بعد دفن الميت"},{ID:60,TITLE:"دعاء زيارة القبور"},
+  {ID:61,TITLE:"دعاء الريح"},{ID:62,TITLE:"دعاء الرعد"},{ID:63,TITLE:"من أدعية الاستسقاء"},
+  {ID:64,TITLE:"الدعاء إذا نزل المطر"},{ID:65,TITLE:"الذكر بعد نزول المطر"},
+  {ID:66,TITLE:"من أدعية الاستصحاء"},{ID:67,TITLE:"دعاء رؤية الهلال"},
+  {ID:68,TITLE:"الدعاء عند إفطار الصائم"},{ID:69,TITLE:"الدعاء قبل الطعام"},
+  {ID:70,TITLE:"الدعاء عند الفراغ من الطعام"},{ID:71,TITLE:"دعاء الضيف لصاحب الطعام"},
+  {ID:72,TITLE:"التعريض بالدعاء لطلب الطعام أو الشراب"},
+  {ID:73,TITLE:"الدعاء إذا أفطر عند أهل بيت"},{ID:74,TITLE:"دعاء الصائم إذا حضر الطعام"},
+  {ID:75,TITLE:"ما يقول الصائم إذا سابه أحد"},{ID:76,TITLE:"الدعاء عند رؤية باكورة الثمر"},
+  {ID:77,TITLE:"دعاء العطاس"},{ID:78,TITLE:"ما يقال للكافر إذا عطس فحمد الله"},
+  {ID:79,TITLE:"الدعاء للمتزوج"},{ID:80,TITLE:"دعاء المتزوج وشراء الدابة"},
+  {ID:81,TITLE:"الدعاء قبل إتيان الزوجة"},{ID:82,TITLE:"دعاء الغضب"},
+  {ID:83,TITLE:"دعاء من رأى مبتلى"},{ID:84,TITLE:"ما يقال في المجلس"},
+  {ID:85,TITLE:"كفارة المجلس"},{ID:86,TITLE:"الدعاء لمن قال غفر الله لك"},
+  {ID:87,TITLE:"الدعاء لمن صنع إليك معروفا"},{ID:88,TITLE:"ما يعصم الله به من الدجال"},
+  {ID:89,TITLE:"الدعاء لمن قال إني أحبك في الله"},{ID:90,TITLE:"الدعاء لمن عرض عليك ماله"},
+  {ID:91,TITLE:"الدعاء لمن أقرض عند القضاء"},{ID:92,TITLE:"دعاء الخوف من الشرك"},
+  {ID:93,TITLE:"الدعاء لمن قال بارك الله فيك"},{ID:94,TITLE:"دعاء كراهية الطيرة"},
+  {ID:95,TITLE:"دعاء الركوب"},{ID:96,TITLE:"دعاء السفر"},
+  {ID:97,TITLE:"دعاء دخول القرية أو البلدة"},{ID:98,TITLE:"دعاء دخول السوق"},
+  {ID:99,TITLE:"الدعاء إذا تعس المركوب"},{ID:100,TITLE:"دعاء المسافر للمقيم"},
+  {ID:101,TITLE:"دعاء المقيم للمسافر"},{ID:102,TITLE:"التكبير والتسبيح في سير السفر"},
+  {ID:103,TITLE:"دعاء المسافر إذا أسحر"},{ID:104,TITLE:"الدعاء إذا نزل منزلا في سفر"},
+  {ID:105,TITLE:"ذكر الرجوع من السفر"},{ID:106,TITLE:"ما يقول من أتاه أمر يسره أو يكرهه"},
+  {ID:107,TITLE:"فضل الصلاة على النبي ﷺ"},{ID:108,TITLE:"إفشاء السلام"},
+  {ID:109,TITLE:"كيف يرد السلام على الكافر"},{ID:110,TITLE:"الدعاء عند سماع صياح الديك"},
+  {ID:111,TITLE:"دعاء نباح الكلاب بالليل"},{ID:112,TITLE:"الدعاء لمن سببته"},
+  {ID:113,TITLE:"ما يقول المسلم إذا مدح المسلم"},{ID:114,TITLE:"ما يقول المسلم إذا زكي"},
+  {ID:115,TITLE:"كيف يلبي المحرم في الحج أو العمرة"},{ID:116,TITLE:"التكبير إذا أتى الركن الأسود"},
+  {ID:117,TITLE:"الدعاء بين الركن اليماني والحجر الأسود"},
+  {ID:118,TITLE:"دعاء الوقوف على الصفا والمروة"},{ID:119,TITLE:"الدعاء يوم عرفة"},
+  {ID:120,TITLE:"الذكر عند المشعر الحرام"},{ID:121,TITLE:"التكبير عند رمي الجمار"},
+  {ID:122,TITLE:"دعاء التعجب والأمر السار"},{ID:123,TITLE:"ما يفعل من أتاه أمر يسره"},
+  {ID:124,TITLE:"ما يقول من أحس وجعا في جسده"},{ID:125,TITLE:"دعاء من خشي أن يصيب شيئا بعينه"},
+  {ID:126,TITLE:"ما يقال عند الفزع"},{ID:127,TITLE:"ما يقول عند الذبح أو النحر"},
+  {ID:128,TITLE:"ما يقول لرد كيد مردة الشياطين"},{ID:129,TITLE:"الاستغفار والتوبة"},
+  {ID:130,TITLE:"فضل التسبيح والتحميد والتهليل والتكبير"},
+  {ID:131,TITLE:"كيف كان النبي يسبح"},{ID:132,TITLE:"من أنواع الخير والآداب الجامعة"},
+];
 let duaView = 'grid', adkView = 'list';
 let tsbState = {}, adkState = {}, hisnState = {};
 let tilData = [], tilIdx = 0, tilCnt = 0, tilTarget = 1, tilAudio = null;
@@ -726,7 +794,7 @@ function showSec(id, btn) {
   document.getElementById(id).classList.add('active');
   btn.classList.add('active');
   window.scrollTo({ top: 0, behavior: 'smooth' });
-  if (id === 'hisn' && !HISN_INDEX) loadHisnIndex();
+  if (id === 'hisn' && !document.getElementById('hisn-cats')) buildHisnCats();
 }
 
 // ══════════════════════════════════════════════════
@@ -1008,14 +1076,9 @@ let hisnCatItems = [];
 let hisnPage = 0;
 const HISN_PER_PAGE = 5;
 
-async function loadHisnIndex() {
-  try {
-    const data = await loadJSON(HISN_API + 'husn_ar.json');
-    HISN_INDEX = data['العربية'];
-    buildHisnCats();
-  } catch(e) {
-    document.getElementById('hisn-cats-wrap').innerHTML = `<p style="text-align:center;color:var(--ink3);padding:30px">⚠️ تعذّر تحميل الفهرس — تحقق من الاتصال</p>`;
-  }
+function loadHisnIndex() {
+  // الفهرس مضمّن مباشرة — لا يحتاج اتصالاً بالإنترنت
+  buildHisnCats();
 }
 
 function buildHisnCats() {
@@ -1060,7 +1123,20 @@ async function loadHisnCat(id, btn, title) {
   document.getElementById('hisn-out').innerHTML = '<div class="loading">جاري التحميل</div>';
 
   try {
-    const data = await loadJSON(HISN_API + id + '.json');
+    // نستخدم CORS proxy لتجاوز قيود المتصفح
+    const targetUrl = encodeURIComponent(HISN_API + id + '.json');
+    const proxyUrl = `https://corsproxy.io/?${targetUrl}`;
+    let data;
+    try {
+      const res = await fetch(proxyUrl);
+      if (!res.ok) throw new Error('proxy failed');
+      data = await res.json();
+    } catch(proxyErr) {
+      // fallback: محاولة مباشرة (قد تعمل في بعض البيئات)
+      const res2 = await fetch(HISN_API + id + '.json');
+      if (!res2.ok) throw new Error('direct failed');
+      data = await res2.json();
+    }
     const catKey = Object.keys(data)[0];
     hisnCatItems = data[catKey];
     hisnPage = 0;
