@@ -1,0 +1,1398 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>لولا دعاؤكم</title>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Scheherazade+New:wght@400;600;700&family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════
+   VARIABLES — LIGHT & DARK
+═══════════════════════════════════════ */
+:root {
+  --ink:#1a1209; --ink2:#4a3c28; --ink3:#6b5838;
+  --gold:#c49a2b; --gold-light:#e8c96a; --gold-dim:#8a6a1a;
+  --teal:#1a5c5a; --teal-light:#2a7a77;
+  --bg:#faf6ea; --bg2:#fff; --bg3:rgba(250,246,234,.96);
+  --shadow:rgba(26,18,9,.14); --border:rgba(196,154,43,.28);
+  --hisn:#2e6b4a; --hisn-light:#3d8c62; --hisn-bg:rgba(46,107,74,.06);
+  --overlay-bg:linear-gradient(160deg,#0d2e2c 0%,#0a2420 60%,#162b20 100%);
+  --nav-shadow:0 2px 12px rgba(26,18,9,.08);
+  --transition: .22s cubic-bezier(.4,0,.2,1);
+}
+[data-theme="dark"] {
+  --ink:#e8dcc8; --ink2:#c8b898; --ink3:#a09070;
+  --gold:#d4aa3a; --gold-light:#e8c96a; --gold-dim:#b8922a;
+  --teal:#2a8a87; --teal-light:#3aaa97;
+  --bg:#161209; --bg2:#1e1810; --bg3:rgba(22,18,9,.96);
+  --shadow:rgba(0,0,0,.4); --border:rgba(196,154,43,.18);
+  --hisn:#2e7a5a; --hisn-light:#3d9c72; --hisn-bg:rgba(46,107,74,.12);
+  --nav-shadow:0 2px 12px rgba(0,0,0,.3);
+}
+
+/* ═══════════════════════════════════════
+   RESET & BASE
+═══════════════════════════════════════ */
+*{margin:0;padding:0;box-sizing:border-box;}
+body {
+  background:var(--bg);
+  color:var(--ink);
+  font-family:'Tajawal',sans-serif;
+  min-height:100vh;
+  overflow-x:hidden;
+  transition:background var(--transition), color var(--transition);
+}
+body::before {
+  content:'';
+  position:fixed;inset:0;
+  background:
+    radial-gradient(ellipse at 15% 15%,rgba(196,154,43,.07) 0%,transparent 55%),
+    radial-gradient(ellipse at 85% 85%,rgba(26,92,90,.05) 0%,transparent 55%);
+  pointer-events:none;z-index:0;
+  transition:opacity var(--transition);
+}
+[data-theme="dark"] body::before {
+  background:
+    radial-gradient(ellipse at 15% 15%,rgba(196,154,43,.04) 0%,transparent 55%),
+    radial-gradient(ellipse at 85% 85%,rgba(26,92,90,.04) 0%,transparent 55%);
+}
+
+/* ═══════════════════════════════════════
+   HEADER
+═══════════════════════════════════════ */
+header {
+  position:relative;z-index:5;
+  text-align:center;
+  padding:48px 20px 30px;
+  border-bottom:1px solid var(--border);
+  background:linear-gradient(180deg,rgba(196,154,43,.07) 0%,transparent 100%);
+}
+.bismillah {
+  font-family:'Scheherazade New',serif;
+  font-size:clamp(1.1rem,2.8vw,1.6rem);
+  color:var(--gold-dim);margin-bottom:14px;opacity:.85;
+}
+header h1 {
+  font-family:'Amiri',serif;
+  font-size:clamp(2.2rem,7vw,3.8rem);
+  font-weight:700;line-height:1.2;margin-bottom:10px;
+}
+header h1 span{color:var(--gold-dim);}
+.h-ayah {
+  font-family:'Scheherazade New',serif;
+  font-size:clamp(.95rem,2.4vw,1.2rem);
+  color:var(--teal);margin:10px auto;max-width:500px;line-height:2;
+}
+.h-ref{font-size:.8rem;color:var(--gold-dim);}
+.divider {
+  display:flex;align-items:center;gap:14px;
+  justify-content:center;margin:10px 0;
+}
+.divider::before,.divider::after {
+  content:'';flex:1;max-width:90px;height:1px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+}
+.divider span{color:var(--gold);font-size:1rem;}
+
+/* Dark Mode Toggle */
+.theme-btn {
+  position:absolute;top:18px;left:18px;
+  background:var(--bg2);
+  border:1px solid var(--border);
+  border-radius:22px;
+  padding:7px 14px;
+  font-family:'Tajawal',sans-serif;
+  font-size:.82rem;
+  color:var(--ink3);
+  cursor:pointer;
+  display:flex;align-items:center;gap:6px;
+  transition:all var(--transition);
+  box-shadow:0 2px 8px var(--shadow);
+  z-index:10;
+}
+.theme-btn:hover{border-color:var(--gold);color:var(--gold-dim);}
+.theme-icon{font-size:1rem;transition:transform .4s;}
+[data-theme="dark"] .theme-icon{transform:rotate(180deg);}
+
+/* ═══════════════════════════════════════
+   NAV
+═══════════════════════════════════════ */
+nav {
+  position:sticky;top:0;z-index:100;
+  background:var(--bg3);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+  display:flex;justify-content:center;
+  overflow-x:auto;scrollbar-width:none;
+  box-shadow:var(--nav-shadow);
+}
+nav::-webkit-scrollbar{display:none;}
+.nb {
+  background:none;border:none;
+  padding:14px 16px;
+  font-family:'Tajawal',sans-serif;
+  font-size:.91rem;font-weight:500;
+  color:var(--ink);cursor:pointer;
+  white-space:nowrap;
+  border-bottom:2.5px solid transparent;
+  transition:all var(--transition);
+  opacity:.6;
+}
+.nb:hover{opacity:1;color:var(--gold-dim);}
+.nb.active{color:var(--gold-dim);border-bottom-color:var(--gold);opacity:1;font-weight:700;}
+
+/* ═══════════════════════════════════════
+   MAIN & SECTIONS
+═══════════════════════════════════════ */
+main{position:relative;z-index:1;max-width:860px;margin:0 auto;padding:30px 16px 100px;}
+.sec{display:none;animation:fu .3s ease;}
+.sec.active{display:block;}
+@keyframes fu{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+.st{text-align:center;margin-bottom:26px;}
+.st h2{font-family:'Amiri',serif;font-size:clamp(1.6rem,5vw,2.4rem);margin-bottom:4px;}
+.st p{color:var(--ink3);font-size:.9rem;margin-top:6px;}
+.loading{text-align:center;padding:60px 20px;color:var(--gold-dim);font-size:1.05rem;}
+.loading::after{content:'...';animation:dots 1.2s infinite;}
+@keyframes dots{0%{content:''}33%{content:'.'}66%{content:'..'}100%{content:'...'}}
+
+/* ═══════════════════════════════════════
+   VIEW TOGGLE
+═══════════════════════════════════════ */
+.vt{display:flex;gap:8px;justify-content:center;margin-bottom:20px;flex-wrap:wrap;}
+.vtb {
+  background:none;
+  border:1px solid var(--border);
+  border-radius:18px;padding:6px 15px;
+  font-family:'Tajawal',sans-serif;
+  font-size:.85rem;cursor:pointer;
+  color:var(--ink3);
+  transition:all var(--transition);
+}
+.vtb.on{background:var(--teal);color:#fff;border-color:var(--teal);}
+
+/* ═══════════════════════════════════════
+   DUAS — CATEGORY GRID
+═══════════════════════════════════════ */
+.cgrid {
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(165px,1fr));
+  gap:11px;margin-bottom:32px;
+}
+.cbtn {
+  background:var(--bg2);
+  border:1px solid var(--border);
+  border-radius:11px;padding:15px 11px;
+  text-align:center;cursor:pointer;
+  transition:all var(--transition);
+  box-shadow:0 2px 7px var(--shadow);
+  font-family:'Tajawal',sans-serif;
+}
+.cbtn:hover{border-color:var(--gold);box-shadow:0 4px 16px rgba(196,154,43,.18);transform:translateY(-2px);}
+.cbtn.sel{background:linear-gradient(135deg,var(--teal),var(--teal-light));border-color:var(--teal);color:#fff;}
+.ci{font-size:1.65rem;display:block;margin-bottom:6px;}
+.cl{font-size:.9rem;font-weight:600;}
+
+/* ═══════════════════════════════════════
+   ACCORDION
+═══════════════════════════════════════ */
+.cacc{display:flex;flex-direction:column;gap:6px;margin-bottom:32px;}
+.ai{background:var(--bg2);border:1px solid var(--border);border-radius:9px;overflow:hidden;box-shadow:0 2px 6px var(--shadow);}
+.ah{display:flex;align-items:center;gap:9px;padding:12px 16px;cursor:pointer;font-family:'Tajawal',sans-serif;font-size:.96rem;font-weight:600;transition:background var(--transition);user-select:none;}
+.ah:hover{background:rgba(196,154,43,.05);}
+.ah.open{background:rgba(26,92,90,.06);color:var(--teal);}
+.aa{margin-right:auto;font-size:.72rem;transition:transform .23s;opacity:.4;}
+.ah.open .aa{transform:rotate(180deg);opacity:1;}
+.ab{display:none;padding:0 0 4px;}
+.ab.open{display:block;}
+
+/* ═══════════════════════════════════════
+   DUA CARDS
+═══════════════════════════════════════ */
+#dout{animation:fu .28s ease;}
+.dc {
+  background:var(--bg2);
+  border:1px solid var(--border);
+  border-radius:13px;
+  padding:24px 24px 18px;
+  margin-bottom:18px;
+  box-shadow:0 3px 14px var(--shadow);
+  position:relative;overflow:hidden;
+  transition:background var(--transition),border-color var(--transition);
+}
+.dc::before{content:'';position:absolute;top:0;right:0;width:3.5px;height:100%;background:linear-gradient(180deg,var(--gold),var(--teal));}
+.dn{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;background:var(--gold);color:#fff;border-radius:50%;font-size:.8rem;font-weight:700;margin-bottom:12px;}
+.dtxt{font-family:'Scheherazade New',serif;font-size:clamp(1.2rem,3vw,1.7rem);line-height:2.35;color:var(--ink);margin-bottom:12px;text-align:justify;}
+.dex{border-top:1px solid rgba(196,154,43,.16);padding-top:12px;margin-top:12px;}
+.dlbl{font-weight:700;font-size:.94rem;margin-bottom:4px;color:var(--ink);}
+.dnote{font-size:.9rem;line-height:1.9;color:var(--ink2);margin-bottom:7px;border-right:3px solid var(--gold-light);padding-right:10px;}
+.dfazl{font-size:.84rem;line-height:1.8;color:var(--teal);margin-bottom:7px;padding:6px 10px;background:var(--hisn-bg);border-radius:6px;}
+.dfazl::before{content:'✦ ';color:var(--gold);}
+.dsrc{display:inline-block;background:rgba(196,154,43,.08);border:1px solid rgba(196,154,43,.22);border-radius:16px;padding:2px 11px;font-size:.77rem;color:var(--gold-dim);}
+
+/* Tasbih row */
+.tsb{display:flex;align-items:center;gap:9px;margin-top:12px;padding-top:11px;border-top:1px dashed rgba(196,154,43,.2);flex-wrap:wrap;}
+.tsb-n{font-family:'Amiri',serif;font-size:1.5rem;font-weight:700;min-width:38px;text-align:center;transition:transform .1s,color .1s;color:var(--ink);}
+.tsb-n.bmp{transform:scale(1.22);color:var(--teal);}
+.tsb-lbl{font-size:.78rem;color:var(--gold-dim);}
+.tsb-prg{flex:1;min-width:55px;height:4px;background:rgba(196,154,43,.12);border-radius:2px;overflow:hidden;}
+.tsb-bar{height:100%;background:linear-gradient(90deg,var(--teal),var(--gold));border-radius:2px;transition:width .2s;}
+.tsb-tap{background:linear-gradient(135deg,var(--teal),var(--teal-light));color:#fff;border:none;border-radius:50%;width:42px;height:42px;font-size:1.15rem;cursor:pointer;box-shadow:0 3px 10px rgba(26,92,90,.28);transition:transform .1s;flex-shrink:0;}
+.tsb-tap:active{transform:scale(.87);}
+.tsb-rst{background:none;border:none;font-size:.74rem;color:var(--ink3);cursor:pointer;text-decoration:underline;opacity:.6;}
+.done{display:none;font-size:.79rem;color:var(--teal);font-weight:600;}
+.done.show{display:inline;}
+
+/* ═══════════════════════════════════════
+   TILAWA OVERLAY
+═══════════════════════════════════════ */
+#til-overlay {
+  display:none;position:fixed;inset:0;z-index:200;
+  background:var(--overlay-bg);
+  flex-direction:column;align-items:center;justify-content:center;
+  padding:32px 22px;text-align:center;
+  overflow-y:auto;
+}
+[data-theme="dark"] #til-overlay{background:linear-gradient(160deg,#060e0d 0%,#050f0b 60%,#090e05 100%);}
+#til-overlay.show{display:flex;}
+#til-close{position:absolute;top:18px;left:18px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;border-radius:20px;padding:7px 15px;font-family:'Tajawal',sans-serif;font-size:.87rem;cursor:pointer;transition:background var(--transition);}
+#til-close:hover{background:rgba(255,255,255,.2);}
+#til-group{position:absolute;top:18px;right:18px;font-family:'Tajawal',sans-serif;font-size:.8rem;color:rgba(255,255,255,.45);}
+#til-source{font-size:.78rem;color:rgba(255,255,255,.35);margin-bottom:8px;}
+#til-txt{font-family:'Scheherazade New',serif;font-size:clamp(1.55rem,4.5vw,2.5rem);line-height:2.25;color:#fff;max-width:720px;margin-bottom:22px;}
+#til-sharh{font-size:clamp(.83rem,2vw,.98rem);color:rgba(255,255,255,.62);line-height:1.92;max-width:620px;margin-bottom:28px;border-top:1px solid rgba(255,255,255,.1);padding-top:16px;}
+#til-count-lbl{font-size:.8rem;color:rgba(255,255,255,.45);margin-bottom:3px;}
+#til-num{font-family:'Amiri',serif;font-size:5rem;color:#fff;font-weight:700;line-height:1;transition:transform .1s;}
+#til-num.bmp{transform:scale(1.1);color:var(--gold-light);}
+#til-target{font-size:.78rem;color:rgba(255,255,255,.38);margin-top:2px;margin-bottom:18px;}
+#til-prg-wrap{width:200px;height:5px;background:rgba(255,255,255,.1);border-radius:3px;margin-bottom:22px;overflow:hidden;}
+#til-prg{height:100%;background:linear-gradient(90deg,var(--teal-light),var(--gold-light));border-radius:3px;transition:width .22s;}
+#til-done{display:none;font-size:.88rem;color:var(--gold-light);font-weight:600;margin-bottom:10px;}
+#til-done.show{display:block;}
+
+/* Audio in tilawa */
+#til-audio-wrap{margin-bottom:16px;}
+#til-audio-btn{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;border-radius:22px;padding:8px 20px;font-family:'Tajawal',sans-serif;font-size:.85rem;cursor:pointer;display:inline-flex;align-items:center;gap:7px;transition:background var(--transition);}
+#til-audio-btn:hover{background:rgba(255,255,255,.18);}
+#til-audio-btn.playing{background:rgba(42,122,119,.5);border-color:var(--teal-light);}
+
+.til-btns{display:flex;gap:14px;align-items:center;}
+#til-tap{background:linear-gradient(135deg,var(--teal-light),#3a9995);color:#fff;border:none;border-radius:50%;width:78px;height:78px;font-size:1.9rem;cursor:pointer;box-shadow:0 5px 18px rgba(0,0,0,.4);transition:transform .12s;}
+#til-tap:active{transform:scale(.9);}
+#til-rst{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.6);border-radius:20px;padding:7px 15px;font-family:'Tajawal',sans-serif;font-size:.81rem;cursor:pointer;}
+.til-nav{display:flex;gap:9px;margin-top:18px;}
+.til-nav button{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);color:rgba(255,255,255,.7);border-radius:20px;padding:7px 16px;font-family:'Tajawal',sans-serif;font-size:.83rem;cursor:pointer;transition:background var(--transition);}
+.til-nav button:hover{background:rgba(255,255,255,.14);}
+
+/* ═══════════════════════════════════════
+   HISN SECTION
+═══════════════════════════════════════ */
+.hisn-badge{display:inline-flex;align-items:center;gap:5px;background:var(--hisn-bg);border:1px solid rgba(46,107,74,.25);border-radius:14px;padding:3px 11px;font-size:.76rem;color:var(--hisn);margin-bottom:14px;}
+.hisn-badge::before{content:'📖';}
+
+.hisn-cats{display:grid;grid-template-columns:repeat(auto-fill,minmax(165px,1fr));gap:10px;margin-bottom:10px;}
+.hisn-btn{
+  background:var(--bg2);
+  border:1px solid rgba(46,107,74,.22);
+  border-radius:10px;padding:13px 10px;
+  text-align:center;cursor:pointer;
+  transition:all var(--transition);
+  box-shadow:0 2px 6px var(--shadow);
+  font-family:'Tajawal',sans-serif;
+  position:relative;
+}
+.hisn-btn:hover{border-color:var(--hisn);box-shadow:0 4px 14px rgba(46,107,74,.15);transform:translateY(-2px);}
+.hisn-btn.sel{background:linear-gradient(135deg,var(--hisn),var(--hisn-light));border-color:var(--hisn);color:#fff;}
+.hisn-btn.loading-cat::after{content:'';position:absolute;bottom:5px;left:50%;transform:translateX(-50%);width:16px;height:2px;background:var(--hisn);border-radius:1px;animation:pulse .8s infinite;}
+@keyframes pulse{0%,100%{opacity:.3}50%{opacity:1}}
+.hci{font-size:1.5rem;display:block;margin-bottom:5px;}
+.hcl{font-size:.85rem;font-weight:600;}
+
+/* Hisn items */
+#hisn-out{animation:fu .28s ease;}
+.hc{
+  background:var(--bg2);
+  border:1px solid rgba(46,107,74,.2);
+  border-radius:12px;
+  padding:22px 22px 16px;
+  margin-bottom:16px;
+  box-shadow:0 3px 12px var(--shadow);
+  position:relative;overflow:hidden;
+  transition:background var(--transition);
+}
+.hc::before{content:'';position:absolute;top:0;right:0;width:3.5px;height:100%;background:linear-gradient(180deg,var(--hisn),var(--teal));}
+.hc-num{display:inline-flex;align-items:center;justify-content:center;width:27px;height:27px;background:var(--hisn);color:#fff;border-radius:50%;font-size:.78rem;font-weight:700;margin-bottom:10px;}
+.hc-txt{font-family:'Scheherazade New',serif;font-size:clamp(1.18rem,3vw,1.65rem);line-height:2.35;color:var(--ink);margin-bottom:12px;}
+.hc-sharh{font-size:.89rem;line-height:1.88;color:var(--ink2);margin-bottom:8px;border-right:3px solid rgba(46,107,74,.3);padding-right:10px;}
+.hc-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:10px;}
+.hc-repeat{background:var(--hisn-bg);border:1px solid rgba(46,107,74,.2);border-radius:12px;padding:2px 10px;font-size:.77rem;color:var(--hisn);}
+
+/* Audio button in hisn cards */
+.audio-btn{
+  display:inline-flex;align-items:center;gap:6px;
+  background:none;border:1px solid var(--border);
+  border-radius:18px;padding:5px 12px;
+  font-family:'Tajawal',sans-serif;font-size:.78rem;
+  color:var(--ink3);cursor:pointer;
+  transition:all var(--transition);
+}
+.audio-btn:hover{background:var(--teal);color:#fff;border-color:var(--teal);}
+.audio-btn.playing{background:var(--teal);color:#fff;border-color:var(--teal);}
+.audio-btn.playing .ab-icon::before{content:'⏸';}
+.ab-icon::before{content:'▶';}
+
+/* Hisn tasbih row */
+.htsb{display:flex;align-items:center;gap:9px;margin-top:11px;padding-top:10px;border-top:1px dashed rgba(46,107,74,.2);flex-wrap:wrap;}
+.htsb-n{font-family:'Amiri',serif;font-size:1.45rem;font-weight:700;min-width:36px;text-align:center;transition:transform .1s,color .1s;color:var(--ink);}
+.htsb-n.bmp{transform:scale(1.22);color:var(--hisn);}
+.htsb-prg{flex:1;min-width:55px;height:4px;background:rgba(46,107,74,.1);border-radius:2px;overflow:hidden;}
+.htsb-bar{height:100%;background:linear-gradient(90deg,var(--hisn),var(--teal));border-radius:2px;transition:width .2s;}
+.htsb-tap{background:var(--hisn);color:#fff;border:none;border-radius:50%;width:40px;height:40px;font-size:1rem;cursor:pointer;box-shadow:0 2px 8px rgba(46,107,74,.3);transition:transform .1s;flex-shrink:0;}
+.htsb-tap:active{transform:scale(.88);}
+.htsb-rst{background:none;border:none;font-size:.72rem;color:var(--ink3);cursor:pointer;text-decoration:underline;opacity:.6;}
+.hdone{display:none;font-size:.77rem;color:var(--hisn);font-weight:600;}
+.hdone.show{display:inline;}
+
+/* Pagination */
+.hisn-more{text-align:center;padding:18px 0;}
+.hisn-more-btn{background:none;border:1px solid var(--border);border-radius:22px;padding:8px 22px;font-family:'Tajawal',sans-serif;font-size:.87rem;color:var(--ink3);cursor:pointer;transition:all var(--transition);}
+.hisn-more-btn:hover{border-color:var(--hisn);color:var(--hisn);}
+
+/* ═══════════════════════════════════════
+   ADKAR
+═══════════════════════════════════════ */
+.adk-list{display:flex;flex-direction:column;gap:13px;}
+.adk-group{background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:hidden;box-shadow:0 2px 12px var(--shadow);}
+.adk-gh{display:flex;align-items:center;gap:10px;padding:15px 19px;cursor:pointer;font-family:'Tajawal',sans-serif;font-size:.98rem;font-weight:700;user-select:none;transition:background var(--transition);color:var(--ink);}
+.adk-gh:hover{background:rgba(196,154,43,.05);}
+.adk-gh.open{background:rgba(26,92,90,.06);color:var(--teal);}
+.adk-ga{margin-right:auto;font-size:.75rem;opacity:.4;transition:transform .23s;}
+.adk-gh.open .adk-ga{transform:rotate(180deg);opacity:1;}
+.adk-gb{display:none;}
+.adk-gb.open{display:block;}
+.adk-item{padding:16px 19px;border-top:1px solid rgba(196,154,43,.12);}
+.adk-txt{font-family:'Scheherazade New',serif;font-size:clamp(1.15rem,2.8vw,1.55rem);line-height:2.35;color:var(--ink);margin-bottom:9px;}
+.adk-chip{display:inline-block;background:rgba(196,154,43,.08);border:1px solid rgba(196,154,43,.2);border-radius:12px;padding:2px 10px;font-size:.77rem;color:var(--gold-dim);margin-bottom:7px;}
+.adk-sharh{font-size:.88rem;color:var(--ink2);line-height:1.88;border-right:3px solid var(--gold-light);padding-right:10px;margin-bottom:9px;}
+.adk-fazl{font-size:.83rem;color:var(--teal);padding:5px 9px;background:rgba(26,92,90,.06);border-radius:6px;margin-bottom:9px;}
+.adk-fazl::before{content:'✦ ';}
+.adk-row{display:flex;align-items:center;gap:9px;margin-top:7px;flex-wrap:wrap;}
+.adk-cnt{font-family:'Amiri',serif;font-size:1.38rem;font-weight:700;min-width:34px;text-align:center;transition:transform .1s,color .1s;color:var(--ink);}
+.adk-cnt.bmp{transform:scale(1.2);color:var(--teal);}
+.adk-tap{background:var(--teal);color:#fff;border:none;border-radius:50%;width:37px;height:37px;font-size:.95rem;cursor:pointer;box-shadow:0 2px 7px rgba(26,92,90,.25);transition:transform .1s;flex-shrink:0;}
+.adk-tap:active{transform:scale(.88);}
+.adk-mini-prg{flex:1;height:4px;background:rgba(196,154,43,.1);border-radius:2px;overflow:hidden;}
+.adk-mini-bar{height:100%;background:linear-gradient(90deg,var(--teal),var(--gold));border-radius:2px;transition:width .2s;}
+.adk-rst{background:none;border:none;font-size:.72rem;color:var(--ink3);cursor:pointer;text-decoration:underline;opacity:.6;}
+.adk-done{display:none;font-size:.76rem;color:var(--teal);font-weight:600;}
+.adk-done.show{display:inline;}
+.open-til{background:none;border:1px solid rgba(26,92,90,.28);border-radius:15px;padding:4px 12px;font-family:'Tajawal',sans-serif;font-size:.77rem;color:var(--teal);cursor:pointer;transition:all var(--transition);white-space:nowrap;}
+.open-til:hover{background:var(--teal);color:#fff;}
+
+/* ═══════════════════════════════════════
+   KHARITA
+═══════════════════════════════════════ */
+#kharita-wrap{width:100%;height:calc(100vh - 180px);min-height:500px;border-radius:14px;overflow:hidden;position:relative;box-shadow:0 4px 22px var(--shadow);}
+#kharita-frame{width:100%;height:100%;border:none;border-radius:14px;}
+
+/* ═══════════════════════════════════════
+   INFO CARDS (ADAB / MAWADI3)
+═══════════════════════════════════════ */
+.ic-list{display:flex;flex-direction:column;gap:13px;}
+.ic{background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:hidden;box-shadow:0 2px 10px var(--shadow);}
+.ich{display:flex;align-items:center;gap:9px;padding:14px 18px;cursor:pointer;font-weight:700;font-size:.96rem;font-family:'Tajawal',sans-serif;transition:background var(--transition);user-select:none;color:var(--ink);}
+.ich:hover{background:rgba(196,154,43,.05);}
+.ich.open{background:rgba(26,92,90,.06);color:var(--teal);}
+.ica{margin-right:auto;font-size:.73rem;opacity:.4;transition:transform .23s;}
+.ich.open .ica{transform:rotate(180deg);opacity:1;}
+.icb{display:none;padding:4px 18px 18px;}
+.icb.open{display:block;}
+.ilist{list-style:none;padding:0;}
+.ilist li{padding:7px 0;border-bottom:1px dashed rgba(196,154,43,.14);display:flex;gap:8px;font-size:.92rem;color:var(--ink2);line-height:1.85;}
+.ilist li:last-child{border-bottom:none;}
+.ilist li::before{content:'✦';color:var(--gold);flex-shrink:0;margin-top:3px;}
+.qref{font-family:'Scheherazade New',serif;font-size:1.06rem;color:var(--teal);display:block;margin:5px 0;padding:6px 11px;background:rgba(26,92,90,.05);border-radius:7px;line-height:2;}
+.href{font-size:.77rem;color:var(--gold-dim);display:block;margin-top:2px;}
+.sub-h{font-family:'Amiri',serif;font-size:1.12rem;color:var(--teal);margin:13px 0 8px;border-bottom:1px solid var(--border);padding-bottom:4px;}
+.note-p{font-size:.92rem;color:var(--ink2);line-height:1.95;margin-bottom:9px;}
+.tips-list{list-style:none;padding:0;margin-top:10px;}
+.tips-list li{padding:5px 0;border-bottom:1px dashed rgba(196,154,43,.13);font-size:.87rem;color:var(--ink2);display:flex;gap:7px;}
+.tips-list li::before{content:'⟵';color:var(--gold);flex-shrink:0;}
+
+/* ═══════════════════════════════════════
+   ABOUT
+═══════════════════════════════════════ */
+.abt{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:32px;box-shadow:0 3px 14px var(--shadow);}
+.abt h3{font-family:'Amiri',serif;font-size:1.35rem;color:var(--teal);margin:20px 0 10px;}
+.abt h3:first-child{margin-top:0;}
+.abt p{font-size:.93rem;color:var(--ink2);line-height:1.95;margin-bottom:10px;}
+.abt ul{list-style:none;padding:0;margin-bottom:11px;}
+.abt ul li{padding:6px 0;border-bottom:1px dashed rgba(196,154,43,.14);display:flex;gap:8px;font-size:.9rem;color:var(--ink2);line-height:1.78;}
+.abt ul li:last-child{border-bottom:none;}
+.abt ul li::before{content:'✦';color:var(--gold);flex-shrink:0;margin-top:3px;}
+.email{text-align:center;padding:12px;background:rgba(196,154,43,.06);border-radius:8px;font-size:.91rem;color:var(--ink2);margin-top:5px;}
+
+/* ═══════════════════════════════════════
+   FOOTER
+═══════════════════════════════════════ */
+footer{position:relative;z-index:1;text-align:center;padding:20px;border-top:1px solid var(--border);color:var(--ink3);font-size:.83rem;}
+
+/* ═══════════════════════════════════════
+   GLOBAL AUDIO PLAYER
+═══════════════════════════════════════ */
+#audio-player{position:fixed;bottom:0;left:0;right:0;z-index:150;background:var(--bg3);backdrop-filter:blur(12px);border-top:1px solid var(--border);padding:10px 18px;display:none;align-items:center;gap:12px;box-shadow:0 -3px 14px var(--shadow);transform:translateY(100%);transition:transform var(--transition);}
+#audio-player.show{display:flex;transform:translateY(0);}
+#ap-title{flex:1;font-size:.85rem;color:var(--ink2);font-family:'Tajawal',sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+#ap-play{background:var(--teal);color:#fff;border:none;border-radius:50%;width:38px;height:38px;font-size:1rem;cursor:pointer;flex-shrink:0;transition:background var(--transition);}
+#ap-play:hover{background:var(--teal-light);}
+#ap-stop{background:none;border:1px solid var(--border);border-radius:50%;width:34px;height:34px;font-size:.85rem;cursor:pointer;color:var(--ink3);flex-shrink:0;}
+#ap-progress{flex:2;height:4px;background:var(--border);border-radius:2px;overflow:hidden;cursor:pointer;}
+#ap-bar{height:100%;background:linear-gradient(90deg,var(--teal),var(--gold));border-radius:2px;width:0%;transition:width .2s;}
+
+/* Toast */
+#toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);background:rgba(26,92,90,.95);color:#fff;padding:9px 20px;border-radius:22px;font-family:'Tajawal',sans-serif;font-size:.87rem;opacity:0;pointer-events:none;transition:all .3s;z-index:300;white-space:nowrap;}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+/* ═══════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════ */
+
+/* ── MOBILE: bottom tab bar ── */
+@media(max-width:640px){
+  nav{
+    position:fixed;
+    top:auto !important;
+    bottom:0;left:0;right:0;
+    border-top:1px solid var(--border);
+    border-bottom:none;
+    box-shadow:0 -3px 14px var(--shadow);
+    justify-content:space-around;
+    padding-bottom:env(safe-area-inset-bottom,0px);
+    z-index:110;
+    height:auto;
+  }
+  .nb{
+    flex:1;
+    padding:8px 2px 6px;
+    font-size:.65rem;
+    flex-direction:column;
+    align-items:center;
+    gap:2px;
+    display:flex;
+    border-bottom:none !important;
+    border-top:2.5px solid transparent;
+    min-width:0;
+    opacity:.55;
+  }
+  .nb.active{border-bottom:none !important;border-top-color:var(--gold);opacity:1;}
+  .nb-icon{font-size:1.25rem;line-height:1;display:block;}
+  .nb-lbl{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:50px;display:block;}
+  main{padding-top:10px;padding-bottom:86px;}
+  #audio-player{bottom:58px;}
+  #toast{bottom:128px;}
+}
+
+@media(max-width:580px){
+  .cgrid,.hisn-cats{grid-template-columns:repeat(2,1fr);}
+  .dc,.hc,.adk-item{padding:16px 13px;}
+  .abt{padding:22px 16px;}
+  #til-txt{font-size:clamp(1.35rem,5vw,1.9rem);}
+  #til-num{font-size:4rem;}
+  .theme-btn{top:12px;left:12px;padding:5px 10px;font-size:.77rem;}
+}
+@media(max-width:380px){
+  .cgrid,.hisn-cats{grid-template-columns:repeat(2,1fr);}
+  .nb{padding:12px 11px;font-size:.83rem;}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <button class="theme-btn" onclick="toggleTheme()" title="تبديل الوضع">
+    <span class="theme-icon">🌙</span>
+    <span id="theme-lbl">ليلي</span>
+  </button>
+  <div class="bismillah">بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ</div>
+  <h1>لولا <span>دعاؤكم</span></h1>
+  <div class="divider"><span>✦</span></div>
+  <div class="h-ayah">قُلْ مَا يَعْبَأُ بِكُمْ رَبِّي لَوْلَا دُعَاؤُكُمْ</div>
+  <div class="h-ref">الفرقان: ٧٧</div>
+</header>
+
+<nav>
+  <button class="nb active" onclick="showSec('duas',this)"><span class="nb-icon">🤲</span><span class="nb-lbl">الأدعية</span></button>
+  <button class="nb" onclick="showSec('adkar',this)"><span class="nb-icon">📿</span><span class="nb-lbl">الأذكار</span></button>
+  <button class="nb" onclick="showSec('hisn',this)"><span class="nb-icon">📖</span><span class="nb-lbl">حصن المسلم</span></button>
+  <button class="nb" onclick="showSec('kharita',this)"><span class="nb-icon">🗺️</span><span class="nb-lbl">الخريطة</span></button>
+  <button class="nb" onclick="showSec('adab',this)"><span class="nb-icon">🕊️</span><span class="nb-lbl">الآداب</span></button>
+  <button class="nb" onclick="showSec('mawadi3',this)"><span class="nb-icon">⭐</span><span class="nb-lbl">المواضع</span></button>
+  <button class="nb" onclick="showSec('about',this)"><span class="nb-icon">ℹ️</span><span class="nb-lbl">عن الكتاب</span></button>
+</nav>
+
+<main>
+
+<!-- ══ DUAS ══ -->
+<section id="duas" class="sec active">
+  <div class="st"><h2>الأدعية</h2><div class="divider"><span>❧</span></div><p>اختر حالك</p></div>
+  <div class="vt">
+    <button class="vtb on" id="vg" onclick="setDuaView('grid')">⊞ شبكة</button>
+    <button class="vtb" id="vl" onclick="setDuaView('list')">☰ قائمة</button>
+  </div>
+  <div id="cgrid" class="cgrid"><div class="loading">جاري التحميل</div></div>
+  <div id="cacc" class="cacc" style="display:none"></div>
+  <div id="dout"></div>
+</section>
+
+<!-- ══ ADKAR ══ -->
+<section id="adkar" class="sec">
+  <div class="st"><h2>الأذكار</h2><div class="divider"><span>❧</span></div></div>
+  <div class="vt">
+    <button class="vtb on" id="val" onclick="setAdkView('list')">☰ قائمة</button>
+    <button class="vtb" id="vat" onclick="setAdkView('til')">🌙 وضع التلاوة</button>
+  </div>
+  <div id="adk-list" class="adk-list"><div class="loading">جاري التحميل</div></div>
+</section>
+
+<!-- ══ HISN ALMUSLIM ══ -->
+<section id="hisn" class="sec">
+  <div class="st">
+    <h2>حصن المسلم</h2>
+    <div class="divider"><span>❧</span></div>
+    <p>١٣٣ تصنيف من أذكار الكتاب والسنة — مع الصوت</p>
+  </div>
+  <div id="hisn-cats-wrap">
+    <div class="loading">جاري تحميل الفهرس...</div>
+  </div>
+  <div id="hisn-out"></div>
+</section>
+
+<!-- ══ KHARITA ══ -->
+<section id="kharita" class="sec">
+  <div class="st">
+    <h2>🗺️ خريطة الأذكار</h2>
+    <div class="divider"><span>❧</span></div>
+    <p>رحلة تفاعلية عبر أذكار الصباح والمساء — اختر محطة وابدأ</p>
+  </div>
+  <div id="kharita-wrap">
+    <iframe id="kharita-frame" src="kharita.html" title="خريطة الأذكار التفاعلية"></iframe>
+  </div>
+</section>
+
+<!-- ══ ADAB ══ -->
+<section id="adab" class="sec">
+  <div class="st"><h2>آداب الدعاء</h2><div class="divider"><span>❧</span></div><p>من الكتاب — آداب وأسباب الإجابة</p></div>
+  <div id="adab-list" class="ic-list"><div class="loading">جاري التحميل</div></div>
+</section>
+
+<!-- ══ MAWADI3 ══ -->
+<section id="mawadi3" class="sec">
+  <div class="st"><h2>مواضع إجابة الدعاء</h2><div class="divider"><span>❧</span></div><p>أوقات وأحوال تُستجاب فيها الدعوة</p></div>
+  <div id="mawadi3-list" class="ic-list"><div class="loading">جاري التحميل</div></div>
+</section>
+
+<!-- ══ ABOUT ══ -->
+<section id="about" class="sec">
+  <div class="st"><h2>عن الكتاب</h2><div class="divider"><span>❧</span></div></div>
+  <div class="abt">
+    <h3>قُلْ مَا يَعْبَأُ بِكُمْ رَبِّي لَوْلَا دُعَاؤُكُمْ</h3>
+    <p>هذا الموقع مُستخلَص من كتاب <strong>«لولا دعاؤكم»</strong>، وقفه مؤلّفه لله تعالى، يُوزَّع مجانًا أو يُباع بسعر التكلفة. الفكرة وُلدت حين رأى مؤلفه مُعتمرًا صغيرًا يقرأ أدعية بصوت عالٍ — فتساءل: لِمَ لا يوجد شرح للأدعية الموثّرة بعبارة مبسّطة؟</p>
+    <p>الكتاب في جوهره شرح لمعاني الأدعية الأثيرة — لا مجرد سرد ألفاظ.</p>
+    <h3>منهج الكتاب</h3>
+    <ul>
+      <li>الأدعية من القرآن وأدعية الأنبياء والصالحين، ومن الأحاديث الصحيحة في الكتب الستة فقط.</li>
+      <li>تقسيم الأدعية على منهج الإمام ابن قيم الجوزية في «الوابل الصيب».</li>
+      <li>الشرح مأخوذ من كتب شروح الأحاديث كفتح الباري وفتاوى ابن تيمية وكتب ابن القيم.</li>
+    </ul>
+    <h3>فصول الكتاب</h3>
+    <ul>
+      <li><strong>الفصل الأول:</strong> سر الدعاء — ما هو الدعاء، معية الله، حسن الظن بالله</li>
+      <li><strong>الفصل الثاني:</strong> آداب الدعاء، مواضع الإجابة، من تُقبل دعوتهم</li>
+      <li><strong>الفصل الثالث:</strong> الأدعية بأحوالها (الاستغفار، الرزق، الهم، الشفاء، الأهل، الاستخارة…)</li>
+      <li><strong>الفصل الرابع:</strong> الأذكار — فضائل السور، أفضل الأذكار، الاستغفار، الحمد، التسبيح</li>
+    </ul>
+    <h3>للتواصل حول الكتاب</h3>
+    <div class="email">📧 thebook77@gmail.com</div>
+  </div>
+</section>
+
+</main>
+
+<!-- ══ TILAWA OVERLAY ══ -->
+<div id="til-overlay">
+  <button id="til-close" onclick="closeTil()">✕ إغلاق</button>
+  <div id="til-group"></div>
+  <div id="til-source"></div>
+  <div id="til-txt"></div>
+  <div id="til-sharh"></div>
+  <div id="til-audio-wrap" style="display:none">
+    <button id="til-audio-btn" onclick="tilPlayAudio()">
+      <span class="ab-icon"></span> استمع
+    </button>
+  </div>
+  <div id="til-count-lbl">العدد</div>
+  <div id="til-num">٠</div>
+  <div id="til-target"></div>
+  <div id="til-prg-wrap"><div id="til-prg"></div></div>
+  <div id="til-done">✓ أحسنت! تقبّل الله منك</div>
+  <div class="til-btns">
+    <button id="til-rst" onclick="tilReset()">إعادة</button>
+    <button id="til-tap" onclick="tilTap()">🤲</button>
+  </div>
+  <div class="til-nav">
+    <button onclick="tilNav(-1)">→ السابق</button>
+    <button onclick="tilNav(1)">← التالي</button>
+  </div>
+</div>
+
+<!-- ══ GLOBAL AUDIO PLAYER ══ -->
+<div id="audio-player">
+  <button id="ap-play" onclick="apToggle()">⏸</button>
+  <div id="ap-progress" onclick="apSeek(event)"><div id="ap-bar"></div></div>
+  <span id="ap-title"></span>
+  <button id="ap-stop" onclick="apStop()">✕</button>
+</div>
+
+<div id="toast"></div>
+
+<footer>
+  <p>من كتاب «لولا دعاؤكم» — وقف لله تعالى</p>
+  <p style="margin-top:4px;font-size:.75rem;opacity:.55">وَقُلْ رَبِّ زِدْنِي عِلْمًا</p>
+</footer>
+
+<script>
+'use strict';
+
+// ══════════════════════════════════════════════════
+// THEME — DARK MODE
+// ══════════════════════════════════════════════════
+function initTheme() {
+  const saved = localStorage.getItem('lda_theme') || 'light';
+  applyTheme(saved, false);
+}
+
+function applyTheme(theme, save = true) {
+  document.documentElement.setAttribute('data-theme', theme);
+  const lbl = document.getElementById('theme-lbl');
+  const icon = document.querySelector('.theme-icon');
+  if (theme === 'dark') {
+    lbl.textContent = 'نهاري';
+    icon.textContent = '☀️';
+  } else {
+    lbl.textContent = 'ليلي';
+    icon.textContent = '🌙';
+  }
+  if (save) localStorage.setItem('lda_theme', theme);
+}
+
+function toggleTheme() {
+  const curr = document.documentElement.getAttribute('data-theme') || 'light';
+  applyTheme(curr === 'dark' ? 'light' : 'dark');
+}
+
+// ══════════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════════
+let DUAS = null, ADKAR = null, ADAB_DATA = null;
+const HISN_INDEX = [
+  {ID:27,TITLE:"أذكار الصباح والمساء"},{ID:28,TITLE:"أذكار النوم"},
+  {ID:1,TITLE:"أذكار الاستيقاظ من النوم"},{ID:6,TITLE:"دعاء دخول الخلاء"},
+  {ID:7,TITLE:"دعاء الخروج من الخلاء"},{ID:8,TITLE:"الذكر قبل الوضوء"},
+  {ID:9,TITLE:"الذكر بعد الفراغ من الوضوء"},{ID:10,TITLE:"الذكر عند الخروج من المنزل"},
+  {ID:11,TITLE:"الذكر عند دخول المنزل"},{ID:12,TITLE:"دعاء الذهاب إلى المسجد"},
+  {ID:13,TITLE:"دعاء دخول المسجد"},{ID:14,TITLE:"دعاء الخروج من المسجد"},
+  {ID:15,TITLE:"أذكار الآذان"},{ID:2,TITLE:"دعاء لبس الثوب"},
+  {ID:3,TITLE:"دعاء لبس الثوب الجديد"},{ID:4,TITLE:"الدعاء لمن لبس ثوبا جديدا"},
+  {ID:5,TITLE:"ما يقول إذا وضع ثوبه"},{ID:16,TITLE:"دعاء الاستفتاح"},
+  {ID:17,TITLE:"دعاء الركوع"},{ID:18,TITLE:"دعاء الرفع من الركوع"},
+  {ID:19,TITLE:"دعاء السجود"},{ID:20,TITLE:"دعاء الجلسة بين السجدتين"},
+  {ID:21,TITLE:"دعاء سجود التلاوة"},{ID:22,TITLE:"التشهد"},
+  {ID:23,TITLE:"الصلاة على النبي بعد التشهد"},{ID:24,TITLE:"الدعاء بعد التشهد الأخير قبل السلام"},
+  {ID:25,TITLE:"الأذكار بعد السلام من الصلاة"},{ID:26,TITLE:"دعاء صلاة الاستخارة"},
+  {ID:29,TITLE:"الدعاء إذا تقلب ليلا"},{ID:30,TITLE:"دعاء الفزع في النوم"},
+  {ID:31,TITLE:"ما يفعل من رأى الرؤيا أو الحلم"},{ID:32,TITLE:"دعاء قنوت الوتر"},
+  {ID:33,TITLE:"الذكر عقب السلام من الوتر"},{ID:34,TITLE:"دعاء الهم والحزن"},
+  {ID:35,TITLE:"دعاء الكرب"},{ID:36,TITLE:"دعاء لقاء العدو وذي السلطان"},
+  {ID:37,TITLE:"دعاء من خاف ظلم السلطان"},{ID:38,TITLE:"الدعاء على العدو"},
+  {ID:39,TITLE:"ما يقول من خاف قوما"},{ID:40,TITLE:"دعاء من أصابه وسوسة في الإيمان"},
+  {ID:41,TITLE:"دعاء قضاء الدين"},{ID:42,TITLE:"دعاء الوسوسة في الصلاة والقراءة"},
+  {ID:43,TITLE:"دعاء من استصعب عليه أمر"},{ID:44,TITLE:"ما يقول ويفعل من أذنب ذنبا"},
+  {ID:45,TITLE:"دعاء طرد الشيطان ووساوسه"},{ID:46,TITLE:"الدعاء حينما يقع ما لا يرضاه"},
+  {ID:47,TITLE:"تهنئة المولود له وجوابه"},{ID:48,TITLE:"ما يعوذ به الأولاد"},
+  {ID:49,TITLE:"الدعاء للمريض في عيادته"},{ID:50,TITLE:"فضل عيادة المريض"},
+  {ID:51,TITLE:"دعاء المريض الذي يئس من حياته"},{ID:52,TITLE:"تلقين المحتضر"},
+  {ID:53,TITLE:"دعاء من أصيب بمصيبة"},{ID:54,TITLE:"الدعاء عند إغماض الميت"},
+  {ID:55,TITLE:"الدعاء للميت في الصلاة عليه"},{ID:56,TITLE:"الدعاء للفرط في الصلاة عليه"},
+  {ID:57,TITLE:"دعاء التعزية"},{ID:58,TITLE:"الدعاء عند إدخال الميت القبر"},
+  {ID:59,TITLE:"الدعاء بعد دفن الميت"},{ID:60,TITLE:"دعاء زيارة القبور"},
+  {ID:61,TITLE:"دعاء الريح"},{ID:62,TITLE:"دعاء الرعد"},{ID:63,TITLE:"من أدعية الاستسقاء"},
+  {ID:64,TITLE:"الدعاء إذا نزل المطر"},{ID:65,TITLE:"الذكر بعد نزول المطر"},
+  {ID:66,TITLE:"من أدعية الاستصحاء"},{ID:67,TITLE:"دعاء رؤية الهلال"},
+  {ID:68,TITLE:"الدعاء عند إفطار الصائم"},{ID:69,TITLE:"الدعاء قبل الطعام"},
+  {ID:70,TITLE:"الدعاء عند الفراغ من الطعام"},{ID:71,TITLE:"دعاء الضيف لصاحب الطعام"},
+  {ID:72,TITLE:"التعريض بالدعاء لطلب الطعام أو الشراب"},
+  {ID:73,TITLE:"الدعاء إذا أفطر عند أهل بيت"},{ID:74,TITLE:"دعاء الصائم إذا حضر الطعام"},
+  {ID:75,TITLE:"ما يقول الصائم إذا سابه أحد"},{ID:76,TITLE:"الدعاء عند رؤية باكورة الثمر"},
+  {ID:77,TITLE:"دعاء العطاس"},{ID:78,TITLE:"ما يقال للكافر إذا عطس فحمد الله"},
+  {ID:79,TITLE:"الدعاء للمتزوج"},{ID:80,TITLE:"دعاء المتزوج وشراء الدابة"},
+  {ID:81,TITLE:"الدعاء قبل إتيان الزوجة"},{ID:82,TITLE:"دعاء الغضب"},
+  {ID:83,TITLE:"دعاء من رأى مبتلى"},{ID:84,TITLE:"ما يقال في المجلس"},
+  {ID:85,TITLE:"كفارة المجلس"},{ID:86,TITLE:"الدعاء لمن قال غفر الله لك"},
+  {ID:87,TITLE:"الدعاء لمن صنع إليك معروفا"},{ID:88,TITLE:"ما يعصم الله به من الدجال"},
+  {ID:89,TITLE:"الدعاء لمن قال إني أحبك في الله"},{ID:90,TITLE:"الدعاء لمن عرض عليك ماله"},
+  {ID:91,TITLE:"الدعاء لمن أقرض عند القضاء"},{ID:92,TITLE:"دعاء الخوف من الشرك"},
+  {ID:93,TITLE:"الدعاء لمن قال بارك الله فيك"},{ID:94,TITLE:"دعاء كراهية الطيرة"},
+  {ID:95,TITLE:"دعاء الركوب"},{ID:96,TITLE:"دعاء السفر"},
+  {ID:97,TITLE:"دعاء دخول القرية أو البلدة"},{ID:98,TITLE:"دعاء دخول السوق"},
+  {ID:99,TITLE:"الدعاء إذا تعس المركوب"},{ID:100,TITLE:"دعاء المسافر للمقيم"},
+  {ID:101,TITLE:"دعاء المقيم للمسافر"},{ID:102,TITLE:"التكبير والتسبيح في سير السفر"},
+  {ID:103,TITLE:"دعاء المسافر إذا أسحر"},{ID:104,TITLE:"الدعاء إذا نزل منزلا في سفر"},
+  {ID:105,TITLE:"ذكر الرجوع من السفر"},{ID:106,TITLE:"ما يقول من أتاه أمر يسره أو يكرهه"},
+  {ID:107,TITLE:"فضل الصلاة على النبي ﷺ"},{ID:108,TITLE:"إفشاء السلام"},
+  {ID:109,TITLE:"كيف يرد السلام على الكافر"},{ID:110,TITLE:"الدعاء عند سماع صياح الديك"},
+  {ID:111,TITLE:"دعاء نباح الكلاب بالليل"},{ID:112,TITLE:"الدعاء لمن سببته"},
+  {ID:113,TITLE:"ما يقول المسلم إذا مدح المسلم"},{ID:114,TITLE:"ما يقول المسلم إذا زكي"},
+  {ID:115,TITLE:"كيف يلبي المحرم في الحج أو العمرة"},{ID:116,TITLE:"التكبير إذا أتى الركن الأسود"},
+  {ID:117,TITLE:"الدعاء بين الركن اليماني والحجر الأسود"},
+  {ID:118,TITLE:"دعاء الوقوف على الصفا والمروة"},{ID:119,TITLE:"الدعاء يوم عرفة"},
+  {ID:120,TITLE:"الذكر عند المشعر الحرام"},{ID:121,TITLE:"التكبير عند رمي الجمار"},
+  {ID:122,TITLE:"دعاء التعجب والأمر السار"},{ID:123,TITLE:"ما يفعل من أتاه أمر يسره"},
+  {ID:124,TITLE:"ما يقول من أحس وجعا في جسده"},{ID:125,TITLE:"دعاء من خشي أن يصيب شيئا بعينه"},
+  {ID:126,TITLE:"ما يقال عند الفزع"},{ID:127,TITLE:"ما يقول عند الذبح أو النحر"},
+  {ID:128,TITLE:"ما يقول لرد كيد مردة الشياطين"},{ID:129,TITLE:"الاستغفار والتوبة"},
+  {ID:130,TITLE:"فضل التسبيح والتحميد والتهليل والتكبير"},
+  {ID:131,TITLE:"كيف كان النبي يسبح"},{ID:132,TITLE:"من أنواع الخير والآداب الجامعة"},
+];
+let duaView = 'grid', adkView = 'list';
+let tsbState = {}, adkState = {}, hisnState = {};
+let tilData = [], tilIdx = 0, tilCnt = 0, tilTarget = 1, tilAudio = null;
+let currentAudio = null, currentAudioUrl = null;
+
+const AR = n => String(Math.floor(n)).replace(/\d/g, d => '٠١٢٣٤٥٦٧٨٩'[d]);
+const key = (...a) => a.join('_');
+
+// ══════════════════════════════════════════════════
+// PERSIST — localStorage
+// ══════════════════════════════════════════════════
+const LS_KEY = 'lda_counts_v2';
+
+function saveState() {
+  localStorage.setItem(LS_KEY, JSON.stringify({ tsb: tsbState, adk: adkState, hisn: hisnState }));
+}
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(LS_KEY);
+    if (!raw) return;
+    const d = JSON.parse(raw);
+    tsbState = d.tsb || {};
+    adkState = d.adk || {};
+    hisnState = d.hisn || {};
+  } catch(e) { /* ignore */ }
+}
+
+// ══════════════════════════════════════════════════
+// JSON LOADER
+// ══════════════════════════════════════════════════
+async function loadJSON(path) {
+  const res = await fetch(path);
+  if (!res.ok) throw new Error(`فشل تحميل ${path}`);
+  return res.json();
+}
+
+async function initAll() {
+  loadState();
+  try {
+    const [duasData, adkarData, adabData] = await Promise.all([
+      loadJSON('data/duas.json'),
+      loadJSON('data/adkar.json'),
+      loadJSON('data/adab-mawadi3.json')
+    ]);
+    DUAS = duasData;
+    ADKAR = adkarData;
+    ADAB_DATA = adabData;
+    buildDuasGrid();
+    buildDuasAccordion();
+    buildAdkList();
+    buildAdabList();
+    buildMawadi3List();
+  } catch(e) {
+    console.error(e);
+    document.querySelectorAll('.loading').forEach(el => el.textContent = '⚠️ تعذّر التحميل');
+  }
+}
+
+// ══════════════════════════════════════════════════
+// NAV
+// ══════════════════════════════════════════════════
+function showSec(id, btn) {
+  document.querySelectorAll('.sec').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nb').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  if (id === 'hisn' && !document.getElementById('hisn-cats')) buildHisnCats();
+}
+
+// ══════════════════════════════════════════════════
+// DUAS
+// ══════════════════════════════════════════════════
+function buildDuasGrid() {
+  document.getElementById('cgrid').innerHTML = DUAS.categories.map(c =>
+    `<button class="cbtn" onclick="pickCat(this,'${c.id}')">
+      <span class="ci">${c.icon}</span>
+      <span class="cl">${c.label}</span>
+    </button>`
+  ).join('');
+}
+
+function buildDuasAccordion() {
+  document.getElementById('cacc').innerHTML = DUAS.categories.map(c =>
+    `<div class="ai">
+      <div class="ah" onclick="togAcc(this,'${c.id}')">${c.icon} ${c.label}<span class="aa">▼</span></div>
+      <div class="ab" id="acc-${c.id}"></div>
+    </div>`
+  ).join('');
+}
+
+function setDuaView(v) {
+  duaView = v;
+  document.getElementById('vg').classList.toggle('on', v === 'grid');
+  document.getElementById('vl').classList.toggle('on', v === 'list');
+  document.getElementById('cgrid').style.display = v === 'grid' ? 'grid' : 'none';
+  document.getElementById('cacc').style.display = v === 'list' ? 'flex' : 'none';
+  document.getElementById('dout').innerHTML = '';
+  document.querySelectorAll('.cbtn').forEach(b => b.classList.remove('sel'));
+}
+
+function pickCat(btn, cat) {
+  document.querySelectorAll('.cbtn').forEach(b => b.classList.remove('sel'));
+  btn.classList.add('sel');
+  renderDuas(cat);
+  document.getElementById('dout').scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
+function togAcc(hdr, cat) {
+  const body = document.getElementById('acc-' + cat);
+  const isOpen = hdr.classList.contains('open');
+  document.querySelectorAll('.ah').forEach(h => h.classList.remove('open'));
+  document.querySelectorAll('.ab').forEach(b => { b.classList.remove('open'); b.innerHTML = ''; });
+  if (!isOpen) { hdr.classList.add('open'); body.classList.add('open'); renderDuasInto(cat, body); }
+}
+
+function renderDuas(cat) {
+  const el = document.getElementById('dout');
+  el.innerHTML = '';
+  renderDuasInto(cat, el);
+}
+
+function renderDuasInto(cat, container) {
+  const items = DUAS.duas[cat] || [];
+  container.innerHTML = items.map((d, i) => {
+    const k = key('d', cat, i);
+    if (!tsbState[k]) tsbState[k] = { cnt: 0, target: d.target || 33 };
+    const { cnt, target } = tsbState[k];
+    const pct = Math.min(cnt / target * 100, 100);
+    return `<div class="dc">
+      <div class="dn">${i + 1}</div>
+      <div class="dtxt">${d.text}</div>
+      <div class="dex">
+        <div class="dlbl">${d.label}</div>
+        ${d.note ? `<div class="dnote">${d.note}</div>` : ''}
+        ${d.fazl ? `<div class="dfazl">${d.fazl}</div>` : ''}
+        <span class="dsrc">${d.source}</span>
+      </div>
+      <div class="tsb">
+        <span class="tsb-n" id="tn-${k}">${AR(cnt)}</span>
+        <span class="tsb-lbl">/ ${AR(target)}</span>
+        <div class="tsb-prg"><div class="tsb-bar" id="tb-${k}" style="width:${pct}%"></div></div>
+        <span class="done${cnt >= target ? ' show' : ''}" id="td-${k}">✓</span>
+        <button class="tsb-tap" onclick="tsbTap('${cat}',${i})">🤲</button>
+        <button class="tsb-rst" onclick="tsbRst('${cat}',${i})">↺</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function tsbTap(cat, i) {
+  const k = key('d', cat, i);
+  const d = DUAS.duas[cat][i];
+  if (!tsbState[k]) tsbState[k] = { cnt: 0, target: d.target || 33 };
+  const s = tsbState[k]; s.cnt++;
+  const el = document.getElementById('tn-' + k); if (!el) return;
+  el.textContent = AR(s.cnt); el.classList.add('bmp'); setTimeout(() => el.classList.remove('bmp'), 100);
+  const bar = document.getElementById('tb-' + k); if (bar) bar.style.width = Math.min(s.cnt / s.target * 100, 100) + '%';
+  const done = document.getElementById('td-' + k); if (done && s.cnt >= s.target) done.classList.add('show');
+  saveState();
+}
+
+function tsbRst(cat, i) {
+  const k = key('d', cat, i); if (tsbState[k]) tsbState[k].cnt = 0;
+  const el = document.getElementById('tn-' + k); if (el) el.textContent = AR(0);
+  const bar = document.getElementById('tb-' + k); if (bar) bar.style.width = '0%';
+  const done = document.getElementById('td-' + k); if (done) done.classList.remove('show');
+  saveState();
+}
+
+// ══════════════════════════════════════════════════
+// ADKAR
+// ══════════════════════════════════════════════════
+function setAdkView(v) {
+  adkView = v;
+  document.getElementById('val').classList.toggle('on', v === 'list');
+  document.getElementById('vat').classList.toggle('on', v === 'til');
+  document.getElementById('adk-list').style.display = v === 'list' ? 'flex' : 'none';
+  if (v === 'til') openTilMode();
+}
+
+function buildAdkList() {
+  document.getElementById('adk-list').innerHTML = ADKAR.map((grp, gi) => `
+    <div class="adk-group">
+      <div class="adk-gh" onclick="togAdk(this,'akg-${gi}')">
+        <span>${grp.icon}</span>${grp.title}
+        <span class="adk-ga">▼</span>
+      </div>
+      <div class="adk-gb" id="akg-${gi}">
+        ${grp.items.map((item, ii) => {
+          const k = key('a', gi, ii);
+          if (!adkState[k]) adkState[k] = { cnt: 0, target: item.target || 33 };
+          const { cnt, target } = adkState[k];
+          const pct = Math.min(cnt / target * 100, 100);
+          return `<div class="adk-item">
+            <div class="adk-txt">${item.text}</div>
+            ${item.chip ? `<span class="adk-chip">${item.chip}</span>` : ''}
+            ${item.sharh ? `<div class="adk-sharh">${item.sharh}</div>` : ''}
+            ${item.fazl ? `<div class="adk-fazl">${item.fazl}</div>` : ''}
+            <div class="adk-row">
+              <span class="adk-cnt" id="ak-${k}">${AR(cnt)}</span>
+              <span style="font-size:.76rem;color:var(--gold-dim)">/ ${AR(target)}</span>
+              <div class="adk-mini-prg"><div class="adk-mini-bar" id="akb-${k}" style="width:${pct}%"></div></div>
+              <span class="adk-done${cnt >= target ? ' show' : ''}" id="akd-${k}">✓</span>
+              <button class="adk-tap" onclick="adkTap(${gi},${ii})">+١</button>
+              <button class="adk-rst" onclick="adkRst(${gi},${ii})">↺</button>
+              <button class="open-til" onclick="openTilAt(${gi},${ii})">🌙 تلاوة</button>
+            </div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+function togAdk(hdr, bodyId) {
+  const body = document.getElementById(bodyId);
+  const isOpen = hdr.classList.contains('open');
+  document.querySelectorAll('.adk-gh').forEach(h => h.classList.remove('open'));
+  document.querySelectorAll('.adk-gb').forEach(b => b.classList.remove('open'));
+  if (!isOpen) { hdr.classList.add('open'); body.classList.add('open'); }
+}
+
+function adkTap(gi, ii) {
+  const k = key('a', gi, ii);
+  if (!adkState[k]) adkState[k] = { cnt: 0, target: ADKAR[gi].items[ii].target || 33 };
+  const s = adkState[k]; s.cnt++;
+  const el = document.getElementById('ak-' + k); if (!el) return;
+  el.textContent = AR(s.cnt); el.classList.add('bmp'); setTimeout(() => el.classList.remove('bmp'), 100);
+  const bar = document.getElementById('akb-' + k); if (bar) bar.style.width = Math.min(s.cnt / s.target * 100, 100) + '%';
+  const done = document.getElementById('akd-' + k); if (done && s.cnt >= s.target) done.classList.add('show');
+  saveState();
+}
+
+function adkRst(gi, ii) {
+  const k = key('a', gi, ii); if (adkState[k]) adkState[k].cnt = 0;
+  const el = document.getElementById('ak-' + k); if (el) el.textContent = AR(0);
+  const bar = document.getElementById('akb-' + k); if (bar) bar.style.width = '0%';
+  const done = document.getElementById('akd-' + k); if (done) done.classList.remove('show');
+  saveState();
+}
+
+// ══════════════════════════════════════════════════
+// TILAWA MODE
+// ══════════════════════════════════════════════════
+function openTilMode() {
+  tilData = [];
+  ADKAR.forEach(grp => grp.items.forEach(item => tilData.push({ ...item, group: grp.title })));
+  tilIdx = 0; showTilItem();
+  document.getElementById('til-overlay').classList.add('show');
+}
+
+function openTilAt(gi, ii) {
+  tilData = [];
+  let startIdx = 0;
+  ADKAR.forEach((grp, g) => grp.items.forEach((item, i) => {
+    if (g === gi && i === ii) startIdx = tilData.length;
+    tilData.push({ ...item, group: grp.title });
+  }));
+  tilIdx = startIdx; showTilItem();
+  document.getElementById('til-overlay').classList.add('show');
+}
+
+function openTilHisn(items, idx, catName) {
+  tilData = items.map(it => ({
+    text: it.ARABIC_TEXT,
+    target: it.REPEAT || 1,
+    audio: it.AUDIO || null,
+    sharh: it.sharh || '',
+    group: catName
+  }));
+  tilIdx = idx || 0; showTilItem();
+  document.getElementById('til-overlay').classList.add('show');
+}
+
+function showTilItem() {
+  const d = tilData[tilIdx]; if (!d) return;
+  tilTarget = d.target || 1;
+  tilAudio = d.audio || null;
+  document.getElementById('til-group').textContent = `${tilIdx + 1} / ${tilData.length} — ${d.group || ''}`;
+  document.getElementById('til-txt').textContent = d.text;
+  document.getElementById('til-sharh').textContent = d.sharh || '';
+  document.getElementById('til-sharh').style.display = d.sharh ? 'block' : 'none';
+  document.getElementById('til-source').textContent = d.source || '';
+  document.getElementById('til-target').textContent = 'الهدف: ' + AR(tilTarget);
+  // audio button
+  const audioWrap = document.getElementById('til-audio-wrap');
+  const audioBtn = document.getElementById('til-audio-btn');
+  if (tilAudio) {
+    audioWrap.style.display = 'block';
+    audioBtn.classList.remove('playing');
+    audioBtn.innerHTML = '<span class="ab-icon"></span> استمع';
+  } else {
+    audioWrap.style.display = 'none';
+  }
+  tilCnt = 0; updTil();
+}
+
+function tilPlayAudio() {
+  if (!tilAudio) return;
+  const btn = document.getElementById('til-audio-btn');
+  if (currentAudioUrl === tilAudio && currentAudio && !currentAudio.paused) {
+    currentAudio.pause();
+    btn.classList.remove('playing');
+    btn.innerHTML = '<span class="ab-icon"></span> استمع';
+  } else {
+    playAudio(tilAudio, tilData[tilIdx]?.text?.slice(0, 30) || 'الذكر');
+    btn.classList.add('playing');
+    btn.innerHTML = '<span class="ab-icon" style="opacity:.6">⏸</span> جاري التشغيل';
+  }
+}
+
+function tilTap() {
+  tilCnt++;
+  const el = document.getElementById('til-num');
+  el.textContent = AR(tilCnt); el.classList.add('bmp'); setTimeout(() => el.classList.remove('bmp'), 120);
+  updTil();
+}
+
+function updTil() {
+  document.getElementById('til-num').textContent = AR(tilCnt);
+  document.getElementById('til-prg').style.width = Math.min(tilCnt / tilTarget * 100, 100) + '%';
+  document.getElementById('til-done').classList.toggle('show', tilCnt >= tilTarget);
+}
+
+function tilReset() { tilCnt = 0; updTil(); }
+
+function tilNav(dir) {
+  tilIdx = (tilIdx + dir + tilData.length) % tilData.length;
+  showTilItem();
+}
+
+function closeTil() {
+  document.getElementById('til-overlay').classList.remove('show');
+  document.getElementById('val').classList.add('on');
+  document.getElementById('vat').classList.remove('on');
+  document.getElementById('adk-list').style.display = 'flex';
+  adkView = 'list';
+}
+
+// ══════════════════════════════════════════════════
+// HISN ALMUSLIM API
+// ══════════════════════════════════════════════════
+const HISN_API = 'https://www.hisnmuslim.com/api/ar/';
+let hisnSelCat = null;
+let hisnCatItems = [];
+let hisnPage = 0;
+const HISN_PER_PAGE = 5;
+
+function loadHisnIndex() {
+  // الفهرس مضمّن مباشرة — لا يحتاج اتصالاً بالإنترنت
+  buildHisnCats();
+}
+
+function buildHisnCats() {
+  const wrap = document.getElementById('hisn-cats-wrap');
+  wrap.innerHTML = `
+    <div class="hisn-badge">من حصن المسلم — أذكار الكتاب والسنة</div>
+    <div class="hisn-cats" id="hisn-cats">
+      ${HISN_INDEX.map(cat => `
+        <button class="hisn-btn" id="hb-${cat.ID}" onclick="loadHisnCat(${cat.ID}, this, '${escHtml(cat.TITLE)}')">
+          <span class="hci">${hisnIcon(cat.TITLE)}</span>
+          <span class="hcl">${cat.TITLE}</span>
+        </button>
+      `).join('')}
+    </div>
+  `;
+}
+
+function hisnIcon(title) {
+  const map = {
+    'صباح': '🌅', 'مساء': '🌆', 'نوم': '🌙', 'استيقاظ': '☀️',
+    'صلاة': '🕌', 'وضوء': '💧', 'مسجد': '🕌', 'أذان': '📢',
+    'طعام': '🍽️', 'سفر': '✈️', 'ركوب': '🚗', 'مرض': '🌱',
+    'ميت': '☁️', 'قبر': '☁️', 'ريح': '🌬️', 'مطر': '🌧️',
+    'استغفار': '🌿', 'تسبيح': '📿', 'هم': '🌧️', 'كرب': '🌊',
+    'شيطان': '🛡️', 'دين': '💰', 'زوج': '🏡', 'مولود': '👶',
+    'خلاء': '🚪', 'منزل': '🏠', 'سوق': '🛍️', 'حج': '🕋',
+    'عمرة': '🕋', 'عرفة': '🌄', 'رمضان': '🌙', 'صوم': '🌙',
+  };
+  for (const [k, v] of Object.entries(map)) {
+    if (title.includes(k)) return v;
+  }
+  return '📿';
+}
+
+function escHtml(s) { return s.replace(/'/g, "\\'"); }
+
+async function loadHisnCat(id, btn, title) {
+  hisnSelCat = id;
+  document.querySelectorAll('.hisn-btn').forEach(b => b.classList.remove('sel'));
+  btn.classList.add('sel', 'loading-cat');
+  document.getElementById('hisn-out').innerHTML = '<div class="loading">جاري التحميل</div>';
+  try {
+    const res = await fetch(HISN_API + id + '.json');
+    if (!res.ok) throw new Error(res.status);
+    const data = await res.json();
+    const catKey = Object.keys(data)[0];
+    hisnCatItems = data[catKey];
+    hisnPage = 0;
+    renderHisnPage(id, title);
+  } catch(e) {
+    document.getElementById('hisn-out').innerHTML =
+      `<p style="text-align:center;padding:40px 20px;color:var(--ink3);font-size:.95rem">
+        ⚠️ تعذّر التحميل — تحقق من الاتصال
+       </p>`;
+  } finally { btn.classList.remove('loading-cat'); }
+}
+
+function renderHisnPage(catId, catTitle) {
+  const start = hisnPage * HISN_PER_PAGE;
+  const end = Math.min(start + HISN_PER_PAGE, hisnCatItems.length);
+  const slice = hisnCatItems.slice(start, end);
+  const out = document.getElementById('hisn-out');
+  if (hisnPage === 0) out.innerHTML = ''; // امسح فقط عند الصفحة الأولى
+
+  const cards = slice.map((item, si) => {
+    const i = start + si;
+    const k = key('h', catId, i);
+    if (!hisnState[k]) hisnState[k] = { cnt: 0, target: item.REPEAT || 1 };
+    const { cnt, target } = hisnState[k];
+    const pct = Math.min(cnt / target * 100, 100);
+    const hasAudio = !!item.AUDIO;
+    return `<div class="hc">
+      <div class="hc-num">${i + 1}</div>
+      <div class="hc-txt">${item.ARABIC_TEXT}</div>
+      <div class="hc-meta">
+        <span class="hc-repeat">× ${AR(item.REPEAT || 1)}</span>
+        ${hasAudio ? `<button class="audio-btn" id="hab-${k}" onclick="playHisnAudio('${item.AUDIO}','${escHtml(catTitle)}',this)"><span class="ab-icon"></span> استمع</button>` : ''}
+        <button class="audio-btn" onclick="openTilHisn(hisnCatItems,${i},'${escHtml(catTitle)}')">🌙 تلاوة</button>
+      </div>
+      <div class="htsb">
+        <span class="htsb-n" id="hn-${k}">${AR(cnt)}</span>
+        <span style="font-size:.77rem;color:var(--ink3)">/ ${AR(target)}</span>
+        <div class="htsb-prg"><div class="htsb-bar" id="hnb-${k}" style="width:${pct}%"></div></div>
+        <span class="hdone${cnt >= target ? ' show' : ''}" id="hnd-${k}">✓</span>
+        <button class="htsb-tap" onclick="hisnTap('${catId}',${i})">+١</button>
+        <button class="htsb-rst" onclick="hisnRst('${catId}',${i})">↺</button>
+      </div>
+    </div>`;
+  }).join('');
+
+  const pager = end < hisnCatItems.length
+    ? `<div class="hisn-more">
+        <button class="hisn-more-btn" onclick="hisnNextPage('${catId}','${escHtml(catTitle)}')">
+          عرض المزيد (${hisnCatItems.length - end} متبقي) ↓
+        </button>
+       </div>`
+    : '';
+
+  if (hisnPage === 0) {
+    out.innerHTML = cards + pager;
+    out.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  } else {
+    out.querySelector('.hisn-more')?.remove();
+    out.insertAdjacentHTML('beforeend', cards + pager);
+    // scroll new cards into view
+    out.lastElementChild?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+}
+
+function hisnNextPage(catId, catTitle) {
+  hisnPage++;
+  renderHisnPage(catId, catTitle);
+}
+
+function hisnTap(catId, i) {
+  const k = key('h', catId, i);
+  const item = hisnCatItems[i];
+  if (!hisnState[k]) hisnState[k] = { cnt: 0, target: item.REPEAT || 1 };
+  const s = hisnState[k]; s.cnt++;
+  const el = document.getElementById('hn-' + k); if (!el) return;
+  el.textContent = AR(s.cnt); el.classList.add('bmp'); setTimeout(() => el.classList.remove('bmp'), 100);
+  const bar = document.getElementById('hnb-' + k); if (bar) bar.style.width = Math.min(s.cnt / s.target * 100, 100) + '%';
+  const done = document.getElementById('hnd-' + k); if (done && s.cnt >= s.target) done.classList.add('show');
+  saveState();
+}
+
+function hisnRst(catId, i) {
+  const k = key('h', catId, i); if (hisnState[k]) hisnState[k].cnt = 0;
+  const el = document.getElementById('hn-' + k); if (el) el.textContent = AR(0);
+  const bar = document.getElementById('hnb-' + k); if (bar) bar.style.width = '0%';
+  const done = document.getElementById('hnd-' + k); if (done) done.classList.remove('show');
+  saveState();
+}
+
+function playHisnAudio(url, title, btn) {
+  document.querySelectorAll('.audio-btn.playing').forEach(b => {
+    if (b !== btn) { b.classList.remove('playing'); b.innerHTML = '<span class="ab-icon"></span> استمع'; }
+  });
+  if (currentAudioUrl === url && currentAudio && !currentAudio.paused) {
+    currentAudio.pause();
+    btn.classList.remove('playing');
+    btn.innerHTML = '<span class="ab-icon"></span> استمع';
+  } else {
+    playAudio(url, title);
+    btn.classList.add('playing');
+    btn.innerHTML = '<span class="ab-icon" style="opacity:.6">⏸</span> إيقاف';
+  }
+}
+
+// ══════════════════════════════════════════════════
+// AUDIO PLAYER
+// ══════════════════════════════════════════════════
+function playAudio(url, title) {
+  if (currentAudio) { currentAudio.pause(); currentAudio = null; }
+  currentAudio = new Audio(url);
+  currentAudioUrl = url;
+  currentAudio.play().catch(() => showToast('⚠️ تعذّر تشغيل الصوت'));
+  const player = document.getElementById('audio-player');
+  document.getElementById('ap-title').textContent = title || 'الذكر';
+  document.getElementById('ap-play').textContent = '⏸';
+  player.classList.add('show');
+  currentAudio.addEventListener('timeupdate', () => {
+    if (!currentAudio.duration) return;
+    const pct = currentAudio.currentTime / currentAudio.duration * 100;
+    document.getElementById('ap-bar').style.width = pct + '%';
+  });
+  currentAudio.addEventListener('ended', () => {
+    document.getElementById('ap-play').textContent = '▶';
+    document.getElementById('ap-bar').style.width = '100%';
+    document.querySelectorAll('.audio-btn.playing').forEach(b => {
+      b.classList.remove('playing');
+      b.innerHTML = '<span class="ab-icon"></span> استمع';
+    });
+  });
+}
+
+function apToggle() {
+  if (!currentAudio) return;
+  if (currentAudio.paused) {
+    currentAudio.play();
+    document.getElementById('ap-play').textContent = '⏸';
+  } else {
+    currentAudio.pause();
+    document.getElementById('ap-play').textContent = '▶';
+  }
+}
+
+function apStop() {
+  if (currentAudio) { currentAudio.pause(); currentAudio = null; currentAudioUrl = null; }
+  document.getElementById('audio-player').classList.remove('show');
+  document.getElementById('ap-bar').style.width = '0%';
+  document.querySelectorAll('.audio-btn.playing').forEach(b => {
+    b.classList.remove('playing');
+    b.innerHTML = '<span class="ab-icon"></span> استمع';
+  });
+}
+
+function apSeek(e) {
+  if (!currentAudio || !currentAudio.duration) return;
+  const rect = e.currentTarget.getBoundingClientRect();
+  const pct = (e.clientX - rect.left) / rect.width;
+  currentAudio.currentTime = pct * currentAudio.duration;
+}
+
+// ══════════════════════════════════════════════════
+// ADAB & MAWADI3
+// ══════════════════════════════════════════════════
+function buildAdabList() {
+  document.getElementById('adab-list').innerHTML = ADAB_DATA.adab.map(sec => {
+    if (sec.type === 'essay') {
+      return `<div class="ic">
+        <div class="ich${sec.open?' open':''}" onclick="togIC(this)">${sec.icon} ${sec.title}<span class="ica"${sec.open?' style="transform:rotate(180deg);opacity:1"':''}>▼</span></div>
+        <div class="icb${sec.open?' open':''}">
+          ${sec.sections.map(s => `
+            ${s.subtitle ? `<div class="sub-h">${s.subtitle}</div>` : ''}
+            ${s.qref ? `<span class="qref">${s.qref}</span><span class="href">${s.ref}</span>` : ''}
+            ${s.body ? `<p class="note-p">${s.body}</p>` : ''}
+          `).join('')}
+        </div>
+      </div>`;
+    }
+    return `<div class="ic">
+      <div class="ich${sec.open?' open':''}" onclick="togIC(this)">${sec.icon} ${sec.title}<span class="ica"${sec.open?' style="transform:rotate(180deg);opacity:1"':''}>▼</span></div>
+      <div class="icb${sec.open?' open':''}">
+        <ul class="ilist">
+          ${sec.items.map(item => `<li><div>
+            <strong>${item.title}</strong>
+            ${item.body ? `<br>${item.body}` : ''}
+            ${item.qref ? `<br><span class="qref">${item.qref}</span>` : ''}
+            ${item.ref ? `<span class="href">${item.ref}</span>` : ''}
+          </div></li>`).join('')}
+        </ul>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function buildMawadi3List() {
+  document.getElementById('mawadi3-list').innerHTML = ADAB_DATA.mawadi3.map(m => `
+    <div class="ic">
+      <div class="ich${m.open?' open':''}" onclick="togIC(this)">${m.icon} ${m.title}<span class="ica"${m.open?' style="transform:rotate(180deg);opacity:1"':''}>▼</span></div>
+      <div class="icb${m.open?' open':''}">
+        ${m.qref ? `<span class="qref">${m.qref}</span><span class="href">${m.ref}</span>` : ''}
+        ${m.body ? `<p class="note-p"${m.qref?' style="margin-top:10px"':''}>${m.body}</p>` : ''}
+        ${m.ref && !m.qref ? `<span class="href">${m.ref}</span>` : ''}
+        ${m.note ? `<p class="note-p" style="margin-top:9px;font-size:.87rem;color:var(--ink3)">${m.note}</p>` : ''}
+        ${m.refExtra ? `<span class="href">${m.refExtra}</span>` : ''}
+        ${m.tipsTitle ? `<div class="sub-h" style="margin-top:13px">${m.tipsTitle}</div>` : ''}
+        ${m.tips ? `<ul class="tips-list">${m.tips.map(t => `<li>${t}</li>`).join('')}</ul>` : ''}
+      </div>
+    </div>
+  `).join('');
+}
+
+function togIC(hdr) {
+  const body = hdr.nextElementSibling;
+  const open = hdr.classList.contains('open');
+  hdr.classList.toggle('open', !open);
+  body.classList.toggle('open', !open);
+}
+
+// ══════════════════════════════════════════════════
+// TOAST
+// ══════════════════════════════════════════════════
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+// ══════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════
+initTheme();
+initAll();
+</script>
+</body>
+</html>
