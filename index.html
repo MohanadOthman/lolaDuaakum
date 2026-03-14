@@ -341,9 +341,9 @@ async function loadJSON(path) {
 async function initAll() {
   try {
     const [duasData, adkarData, adabData] = await Promise.all([
-      loadJSON('data/duas.json'),
-      loadJSON('data/adkar.json'),
-      loadJSON('data/adab-mawadi3.json')
+      loadJSON('data/duas.json?v=1'),
+      loadJSON('data/adkar.json?v=1'),
+      loadJSON('data/adab-mawadi3.json?v=1')
     ]);
     DUAS = duasData;
     ADKAR = adkarData;
