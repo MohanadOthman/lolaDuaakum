@@ -423,9 +423,15 @@ main{position:relative;z-index:1;max-width:860px;margin:0 auto;padding:30px 16px
 .icb{display:none;padding:4px 18px 18px;}
 .icb.open{display:block;}
 .ilist{list-style:none;padding:0;}
-.ilist li{padding:7px 0;border-bottom:1px dashed rgba(196,154,43,.14);display:flex;gap:8px;font-size:.92rem;color:var(--ink2);line-height:1.85;}
+.ilist li{padding:9px 0;border-bottom:1px dashed rgba(196,154,43,.14);display:flex;gap:8px;font-size:.92rem;color:var(--ink2);line-height:1.85;}
 .ilist li:last-child{border-bottom:none;}
-.ilist li::before{content:'✦';color:var(--gold);flex-shrink:0;margin-top:3px;}
+.ilist li::before{content:'✦';color:var(--gold);flex-shrink:0;margin-top:4px;}
+.ilist-item{flex-direction:column;gap:4px;}
+.ilist-item::before{margin-top:6px;}
+.ilist-title{font-weight:700;color:var(--ink);font-size:.95rem;}
+.ilist-body{color:var(--ink2);font-size:.9rem;line-height:1.9;margin-top:2px;}
+.ilist-qref{font-family:'Scheherazade New',serif;color:var(--teal);font-size:1rem;line-height:2;display:block;margin-top:4px;padding-right:4px;border-right:2px solid var(--teal);padding-right:8px;}
+.ilist-ref{font-size:.78rem;color:var(--gold-dim);margin-top:2px;display:block;}
 .qref{font-family:'Scheherazade New',serif;font-size:1.06rem;color:var(--teal);display:block;margin:5px 0;padding:6px 11px;background:rgba(26,92,90,.05);border-radius:7px;line-height:2;}
 .href{font-size:.77rem;color:var(--gold-dim);display:block;margin-top:2px;}
 .sub-h{font-family:'Amiri',serif;font-size:1.12rem;color:var(--teal);margin:13px 0 8px;border-bottom:1px solid var(--border);padding-bottom:4px;}
@@ -1521,19 +1527,37 @@ function showToast(msg) {
 // ══════════════════════════════════════════════════
 // ADAB & MAWADI3
 // ══════════════════════════════════════════════════
+// Helper: renders a single sub-item from adab/mawadi3 items array
+function renderSubItem(x) {
+  if (typeof x === 'string') return `<li class="ilist-item"><span class="ilist-title">${x}</span></li>`;
+  const parts = [];
+  if (x.title) parts.push(`<span class="ilist-title">${x.title}</span>`);
+  if (x.body)  parts.push(`<span class="ilist-body">${x.body}</span>`);
+  if (x.qref) parts.push(`<span class="ilist-qref">﴿${x.qref}﴾</span>`);
+  if (x.ref)  parts.push(`<span class="ilist-ref">${x.ref}</span>`);
+  return `<li class="ilist-item">${parts.join('')}</li>`;
+}
+
 function buildAdabList() {
   const el = document.getElementById('adab-list');
   if(!el || !ADAB_DATA) return;
   el.innerHTML = (ADAB_DATA.adab || []).map((item, i) => `
     <div class="ic">
       <div class="ich" onclick="togIC(this,'icb-adab-${i}')">${item.icon||'✦'} ${item.title}<span class="ica">▼</span></div>
-      <div class="icb" id="icb-adab-${i}">
-        ${item.note ? `<p class="note-p">${item.note}</p>` : ''}
+      <div class="icb" id="icb-adab-${i}" ${item.open ? 'class="open"' : ''}>
+        ${item.note  ? `<p class="note-p">${item.note}</p>` : ''}
         ${item.quote ? `<span class="qref">${item.quote}</span><span class="href">${item.ref||''}</span>` : ''}
-        ${item.items ? `<ul class="ilist">${item.items.map(x=>`<li>${x}</li>`).join('')}</ul>` : ''}
-        ${item.tips ? `<ul class="tips-list">${item.tips.map(x=>`<li>${x}</li>`).join('')}</ul>` : ''}
+        ${item.items ? `<ul class="ilist">${item.items.map(renderSubItem).join('')}</ul>` : ''}
+        ${item.tips  ? `<ul class="tips-list">${item.tips.map(x => typeof x === 'string' ? `<li>${x}</li>` : `<li>${x.title||''}${x.body ? ' — '+x.body : ''}</li>`).join('')}</ul>` : ''}
       </div>
     </div>`).join('');
+  // open the ones marked open:true
+  (ADAB_DATA.adab || []).forEach((item, i) => {
+    if (item.open) {
+      const hdr = document.querySelector(`#icb-adab-${i}`)?.previousElementSibling;
+      if (hdr) hdr.classList.add('open');
+    }
+  });
 }
 
 function buildMawadi3List() {
@@ -1542,12 +1566,18 @@ function buildMawadi3List() {
   el.innerHTML = (ADAB_DATA.mawadi3 || []).map((item, i) => `
     <div class="ic">
       <div class="ich" onclick="togIC(this,'icb-mw-${i}')">${item.icon||'⭐'} ${item.title}<span class="ica">▼</span></div>
-      <div class="icb" id="icb-mw-${i}">
-        ${item.note ? `<p class="note-p">${item.note}</p>` : ''}
+      <div class="icb" id="icb-mw-${i}" ${item.open ? 'class="open"' : ''}>
+        ${item.note  ? `<p class="note-p">${item.note}</p>` : ''}
         ${item.quote ? `<span class="qref">${item.quote}</span><span class="href">${item.ref||''}</span>` : ''}
-        ${item.items ? `<ul class="ilist">${item.items.map(x=>`<li>${x}</li>`).join('')}</ul>` : ''}
+        ${item.items ? `<ul class="ilist">${item.items.map(renderSubItem).join('')}</ul>` : ''}
       </div>
     </div>`).join('');
+  (ADAB_DATA.mawadi3 || []).forEach((item, i) => {
+    if (item.open) {
+      const hdr = document.querySelector(`#icb-mw-${i}`)?.previousElementSibling;
+      if (hdr) hdr.classList.add('open');
+    }
+  });
 }
 
 function togIC(hdr, bodyId) {
