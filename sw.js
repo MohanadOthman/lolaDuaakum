@@ -9,7 +9,7 @@
    └─────────────────────────────────────────────────────┘
    ═══════════════════════════════════════════════════════════ */
 
-const APP_VERSION  = '1.0.1';
+const APP_VERSION  = '1.0.2';
 const CACHE_NAME   = `lda-v${APP_VERSION}`;
 const DATA_CACHE   = `lda-data-v${APP_VERSION}`;
 
