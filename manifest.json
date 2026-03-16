@@ -2,8 +2,8 @@
   "name": "لولا دعاؤكم — أذكار وأدعية",
   "short_name": "لولا دعاؤكم",
   "description": "منصة أذكار وأدعية تفاعلية — حصن المسلم مع شرح من كتاب لولا دعاؤكم",
-  "start_url": "/",
-  "scope": "/",
+  "start_url": "/lolaDuaakum/",
+  "scope": "/lolaDuaakum/",
   "display": "standalone",
   "orientation": "portrait",
   "theme_color": "#1a5c5a",
@@ -36,14 +36,14 @@
       "name": "أذكار الصباح والمساء",
       "short_name": "الصباح والمساء",
       "description": "أذكار الصباح والمساء من حصن المسلم",
-      "url": "/?shortcut=morning",
+      "url": "/lolaDuaakum/?shortcut=morning",
       "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }]
     },
     {
       "name": "أذكار النوم",
       "short_name": "أذكار النوم",
       "description": "أذكار النوم والاستيقاظ",
-      "url": "/?shortcut=sleep",
+      "url": "/lolaDuaakum/?shortcut=sleep",
       "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }]
     }
   ]

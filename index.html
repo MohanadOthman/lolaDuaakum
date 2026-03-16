@@ -662,7 +662,7 @@ footer{position:relative;z-index:1;text-align:center;padding:20px;border-top:1px
       <li><strong>الفصل الرابع:</strong> الأذكار — فضائل السور، أفضل الأذكار، الاستغفار، الحمد، التسبيح</li>
     </ul>
     <h3>للتواصل حول الكتاب</h3>
-    <div class="email">📧 lolaDuaakum@gmail.com</div>
+    <div class="email">📧 <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="fc9093909db8899d9d978991bc9b919d9590d29f9391">[email&#160;protected]</a></div>
   </div>
 </section>
 
@@ -710,7 +710,7 @@ footer{position:relative;z-index:1;text-align:center;padding:20px;border-top:1px
   <p style="margin-top:4px;font-size:.75rem;opacity:.55">وَقُلْ رَبِّ زِدْنِي عِلْمًا</p>
 </footer>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 'use strict';
 
 // ══════════════════════════════════════════════════
@@ -1555,7 +1555,7 @@ let deferredPrompt = null;
 // Register Service Worker
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js')
+    navigator.serviceWorker.register('/lolaDuaakum/sw.js')
       .then(reg => {
         console.log('[PWA] SW registered:', reg.scope);
         reg.active?.postMessage({ type: 'CACHE_DATA' });
@@ -1612,13 +1612,4 @@ if (_shortcut) {
       const hisnNavBtn = document.querySelector('.nb[onclick*="hisn"]');
       if (hisnNavBtn) hisnNavBtn.click();
       setTimeout(() => {
-        if (_shortcut === 'morning') hisnQuick(27, 'أذكار الصباح والمساء', null);
-        else if (_shortcut === 'sleep') hisnQuick(28, 'أذكار النوم', null);
-      }, 400);
-    }, 600);
-  });
-}
-</script>
-
-</body>
-</html>
+        if (_sho
