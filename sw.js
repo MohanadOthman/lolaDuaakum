@@ -1,10 +1,17 @@
 /* ═══════════════════════════════════════════════════════════
    SERVICE WORKER — لولا دعاؤكم PWA
    Strategy: Cache First for assets, Network First for JSON data
+
+   ┌─────────────────────────────────────────────────────┐
+   │  عند كل إصدار جديد: غيّر APP_VERSION فقط            │
+   │  مثال: '1.0.1' ← '1.0.2'                           │
+   │  هذا يحذف الكاش القديم ويجبر المتصفح على التحديث   │
+   └─────────────────────────────────────────────────────┘
    ═══════════════════════════════════════════════════════════ */
 
-const CACHE_NAME = 'lda-v1';
-const DATA_CACHE = 'lda-data-v1';
+const APP_VERSION  = '1.0.1';
+const CACHE_NAME   = `lda-v${APP_VERSION}`;
+const DATA_CACHE   = `lda-data-v${APP_VERSION}`;
 
 // Core shell files — cached on install
 const SHELL_FILES = [
@@ -35,21 +42,25 @@ self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => cache.addAll(SHELL_FILES))
-      .then(() => self.skipWaiting())
+      .then(() => self.skipWaiting())          // تفعيل فوري بدون انتظار
       .catch(err => console.warn('[SW] Install cache partial failure:', err))
   );
 });
 
 // ── ACTIVATE ─────────────────────────────────────────────
+// يحذف أي كاش اسمه مختلف عن الإصدار الحالي
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys().then(keys =>
       Promise.all(
         keys
           .filter(k => k !== CACHE_NAME && k !== DATA_CACHE)
-          .map(k => caches.delete(k))
+          .map(k => {
+            console.log('[SW] Deleting old cache:', k);
+            return caches.delete(k);
+          })
       )
-    ).then(() => self.clients.claim())
+    ).then(() => self.clients.claim())        // يسيطر على الصفحة فوراً
   );
 });
 
@@ -84,9 +95,15 @@ self.addEventListener('fetch', event => {
     return; // Let browser handle audio normally
   }
 
-  // ⑤ App shell & local assets — Cache first
+  // ⑤ App shell & local assets
   if (url.origin === self.location.origin) {
-    event.respondWith(cacheFirstWithNetwork(event.request, CACHE_NAME));
+    // index.html → Network First دائماً لضمان تحميل آخر إصدار
+    if (url.pathname === '/' || url.pathname.endsWith('index.html') || url.pathname.endsWith('kharita.html')) {
+      event.respondWith(networkFirstWithCache(event.request, CACHE_NAME));
+    } else {
+      // باقي الأصول (CSS، JS، أيقونات) → Cache First للسرعة
+      event.respondWith(cacheFirstWithNetwork(event.request, CACHE_NAME));
+    }
     return;
   }
 });
@@ -137,8 +154,7 @@ async function cacheFirstWithNetwork(request, cacheName) {
   }
 }
 
-// ── BACKGROUND SYNC ──────────────────────────────────────
-// Handle shortcut URLs from manifest
+// ── MESSAGES ─────────────────────────────────────────────
 self.addEventListener('message', event => {
   if (event.data && event.data.type === 'SKIP_WAITING') {
     self.skipWaiting();

@@ -1638,6 +1638,12 @@ if ('serviceWorker' in navigator) {
         });
       })
       .catch(err => console.warn('[PWA] SW failed:', err));
+
+    // لما يتفعّل SW جديد، أعد تحميل الصفحة تلقائياً لضمان آخر إصدار
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+      console.log('[PWA] New SW activated — reloading page');
+      window.location.reload();
+    });
   });
 }
 
