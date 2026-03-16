@@ -662,7 +662,19 @@ footer{position:relative;z-index:1;text-align:center;padding:20px;border-top:1px
       <li><strong>الفصل الرابع:</strong> الأذكار — فضائل السور، أفضل الأذكار، الاستغفار، الحمد، التسبيح</li>
     </ul>
     <h3>للتواصل حول الكتاب</h3>
-    <div class="email">📧 <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="fc9093909db8899d9d978991bc9b919d9590d29f9391">[email&#160;protected]</a></div>
+    <div class="email">📧 lolaDuaakum@gmail.com</div>
+
+    <h3>تثبيت التطبيق 📲</h3>
+    <div style="text-align:center;padding:12px 0 4px">
+      <p style="font-size:.87rem;color:var(--ink3);margin-bottom:14px">ثبّت التطبيق على جهازك للوصول السريع والعمل بدون إنترنت</p>
+      <button onclick="triggerInstall()" style="background:linear-gradient(135deg,var(--teal),var(--teal-light));color:#fff;border:none;border-radius:24px;padding:13px 30px;font-family:'Tajawal',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;box-shadow:0 4px 14px rgba(26,92,90,.35);display:inline-flex;align-items:center;gap:9px;transition:opacity .2s">
+        <span>📲</span> تثبيت التطبيق
+      </button>
+      <div id="install-status" style="margin-top:12px;font-size:.83rem;color:var(--ink3)"></div>
+      <p style="font-size:.77rem;color:var(--ink3);margin-top:12px;opacity:.65;line-height:1.8">
+        إذا لم يعمل الزر — افتح قائمة المتصفح ⋮ ثم اختر<br><strong>"إضافة إلى الشاشة الرئيسية"</strong>
+      </p>
+    </div>
   </div>
 </section>
 
@@ -1555,35 +1567,75 @@ let deferredPrompt = null;
 // Register Service Worker
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('sw.js')
+    navigator.serviceWorker.register('/lolaDuaakum/sw.js')
       .then(reg => {
         console.log('[PWA] SW registered:', reg.scope);
-        reg.active?.postMessage({ type: 'CACHE_DATA' });
+        // Cache data files
+        if (reg.active) reg.active.postMessage({ type: 'CACHE_DATA' });
+        reg.addEventListener('updatefound', () => {
+          const newWorker = reg.installing;
+          newWorker?.addEventListener('statechange', () => {
+            if (newWorker.state === 'activated') reg.active?.postMessage({ type: 'CACHE_DATA' });
+          });
+        });
       })
-      .catch(err => console.warn('[PWA] SW registration failed:', err));
+      .catch(err => console.warn('[PWA] SW failed:', err));
   });
 }
 
-// Install banner logic
+// Capture install prompt
 window.addEventListener('beforeinstallprompt', e => {
   e.preventDefault();
   deferredPrompt = e;
+  console.log('[PWA] Install prompt captured');
+  // Show banner (only if not dismissed before)
   const banner = document.getElementById('pwa-banner');
   if (banner && !localStorage.getItem('pwa_dismissed')) {
     banner.style.display = 'flex';
   }
+  // Update status in about section
+  const status = document.getElementById('install-status');
+  if (status) status.textContent = '✓ جاهز للتثبيت — اضغط الزر أعلاه';
 });
 
-document.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('pwa-install-btn')?.addEventListener('click', async () => {
-    if (!deferredPrompt) return;
+// Central install trigger function (used by banner + about button)
+async function triggerInstall() {
+  if (deferredPrompt) {
     deferredPrompt.prompt();
     const { outcome } = await deferredPrompt.userChoice;
     deferredPrompt = null;
     document.getElementById('pwa-banner').style.display = 'none';
-    if (outcome === 'accepted') showToast('✓ تم تثبيت التطبيق بنجاح!');
+    const status = document.getElementById('install-status');
+    if (outcome === 'accepted') {
+      showToast('✓ تم تثبيت التطبيق بنجاح!');
+      if (status) status.textContent = '✓ تم التثبيت!';
+    } else {
+      if (status) status.textContent = 'تم إلغاء التثبيت';
+    }
     localStorage.setItem('pwa_dismissed', '1');
+  } else {
+    // Fallback: guide user manually
+    const status = document.getElementById('install-status');
+    if (status) status.innerHTML = '⚠️ افتح قائمة المتصفح ثم اختر<br><strong>"إضافة إلى الشاشة الرئيسية"</strong>';
+    showToast('افتح قائمة المتصفح ← إضافة إلى الشاشة الرئيسية');
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  // Banner install button
+  document.getElementById('pwa-install-btn')?.addEventListener('click', triggerInstall);
+  
+  // Reset dismissed flag if user visits about section (give another chance)
+  document.querySelector('[onclick*="about"]')?.addEventListener('click', () => {
+    localStorage.removeItem('pwa_dismissed');
   });
+});
+
+window.addEventListener('appinstalled', () => {
+  document.getElementById('pwa-banner').style.display = 'none';
+  const status = document.getElementById('install-status');
+  if (status) status.textContent = '✓ التطبيق مثبّت بنجاح!';
+  showToast('✓ تم تثبيت لولا دعاؤكم');
 });
 
 window.addEventListener('appinstalled', () => {
