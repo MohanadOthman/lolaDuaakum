@@ -1,0 +1,50 @@
+{
+  "name": "لولا دعاؤكم — أذكار وأدعية",
+  "short_name": "لولا دعاؤكم",
+  "description": "منصة أذكار وأدعية تفاعلية — حصن المسلم مع شرح من كتاب لولا دعاؤكم",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#1a5c5a",
+  "background_color": "#0d2e2c",
+  "lang": "ar",
+  "dir": "rtl",
+  "categories": ["religion", "lifestyle", "education"],
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/icon-180.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "أذكار الصباح والمساء",
+      "short_name": "الصباح والمساء",
+      "description": "أذكار الصباح والمساء من حصن المسلم",
+      "url": "/?shortcut=morning",
+      "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "أذكار النوم",
+      "short_name": "أذكار النوم",
+      "description": "أذكار النوم والاستيقاظ",
+      "url": "/?shortcut=sleep",
+      "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}
