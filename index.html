@@ -569,6 +569,7 @@ footer{position:relative;z-index:1;text-align:center;padding:20px;border-top:1px
   <div class="vt">
     <button class="vtb on" id="vg" onclick="setDuaView('grid')">⊞ شبكة</button>
     <button class="vtb" id="vl" onclick="setDuaView('list')">☰ قائمة</button>
+    <button class="vtb" id="vdt" onclick="setDuaView('til')">🌙 وضع التلاوة</button>
   </div>
   <div id="cgrid" class="cgrid"><div class="loading">جاري التحميل</div></div>
   <div id="cacc" class="cacc" style="display:none"></div>
@@ -861,7 +862,7 @@ const HISN_INDEX = [
 ];
 let duaView = 'grid', adkView = 'list';
 let tsbState = {}, adkState = {}, hisnState = {};
-let tilData = [], tilIdx = 0, tilCnt = 0, tilTarget = 1, tilAudio = null;
+let tilData = [], tilIdx = 0, tilCnt = 0, tilTarget = 1, tilAudio = null, tilSource = 'adkar';
 let currentAudio = null, currentAudioUrl = null;
 
 const AR = n => String(Math.floor(n)).replace(/\d/g, d => '٠١٢٣٤٥٦٧٨٩'[d]);
@@ -955,10 +956,64 @@ function setDuaView(v) {
   duaView = v;
   document.getElementById('vg').classList.toggle('on', v === 'grid');
   document.getElementById('vl').classList.toggle('on', v === 'list');
+  document.getElementById('vdt').classList.toggle('on', v === 'til');
   document.getElementById('cgrid').style.display = v === 'grid' ? 'grid' : 'none';
   document.getElementById('cacc').style.display = v === 'list' ? 'flex' : 'none';
   document.getElementById('dout').innerHTML = '';
   document.querySelectorAll('.cbtn').forEach(b => b.classList.remove('sel'));
+  if (v === 'til') openTilDuas(null);
+}
+
+// فتح وضع التلاوة لكل الأدعية أو لفئة محددة
+function openTilDuas(cat) {
+  tilSource = 'duas';
+  tilData = [];
+  if (cat) {
+    const catLabel = DUAS.categories.find(c => c.id === cat)?.label || '';
+    (DUAS.duas[cat] || []).forEach(d => tilData.push({
+      text: d.text,
+      target: d.target || 1,
+      sharh: d.note || '',
+      source: d.source || '',
+      group: catLabel,
+      audio: null
+    }));
+  } else {
+    DUAS.categories.forEach(c => {
+      (DUAS.duas[c.id] || []).forEach(d => tilData.push({
+        text: d.text,
+        target: d.target || 1,
+        sharh: d.note || '',
+        source: d.source || '',
+        group: c.label,
+        audio: null
+      }));
+    });
+  }
+  tilIdx = 0; showTilItem();
+  document.getElementById('til-overlay').classList.add('show');
+}
+
+// فتح التلاوة من بطاقة دعاء محددة
+function openTilDuasAt(cat, startI) {
+  tilSource = 'duas';
+  tilData = [];
+  let startIdx = 0;
+  DUAS.categories.forEach(c => {
+    (DUAS.duas[c.id] || []).forEach((d, i) => {
+      if (c.id === cat && i === startI) startIdx = tilData.length;
+      tilData.push({
+        text: d.text,
+        target: d.target || 1,
+        sharh: d.note || '',
+        source: d.source || '',
+        group: c.label,
+        audio: null
+      });
+    });
+  });
+  tilIdx = startIdx; showTilItem();
+  document.getElementById('til-overlay').classList.add('show');
 }
 
 function pickCat(btn, cat) {
@@ -1005,6 +1060,7 @@ function renderDuasInto(cat, container) {
         <span class="done${cnt >= target ? ' show' : ''}" id="td-${k}">✓</span>
         <button class="tsb-tap" onclick="tsbTap('${cat}',${i})">🤲</button>
         <button class="tsb-rst" onclick="tsbRst('${cat}',${i})">↺</button>
+        <button class="open-til" onclick="openTilDuasAt('${cat}',${i})">🌙 تلاوة</button>
       </div>
     </div>`;
   }).join('');
@@ -1106,6 +1162,7 @@ function adkRst(gi, ii) {
 // TILAWA MODE
 // ══════════════════════════════════════════════════
 function openTilMode() {
+  tilSource = 'adkar';
   tilData = [];
   ADKAR.forEach(grp => grp.items.forEach(item => tilData.push({ ...item, group: grp.title })));
   tilIdx = 0; showTilItem();
@@ -1113,6 +1170,7 @@ function openTilMode() {
 }
 
 function openTilAt(gi, ii) {
+  tilSource = 'adkar';
   tilData = [];
   let startIdx = 0;
   ADKAR.forEach((grp, g) => grp.items.forEach((item, i) => {
@@ -1124,6 +1182,7 @@ function openTilAt(gi, ii) {
 }
 
 function openTilHisn(items, idx, catName) {
+  tilSource = 'hisn';
   tilData = items.map(it => ({
     text: it.ARABIC_TEXT,
     target: it.REPEAT || 1,
@@ -1194,10 +1253,19 @@ function tilNav(dir) {
 
 function closeTil() {
   document.getElementById('til-overlay').classList.remove('show');
-  document.getElementById('val').classList.add('on');
-  document.getElementById('vat').classList.remove('on');
-  document.getElementById('adk-list').style.display = 'flex';
-  adkView = 'list';
+  if (tilSource === 'duas') {
+    document.getElementById('vg').classList.add('on');
+    document.getElementById('vl').classList.remove('on');
+    document.getElementById('vdt').classList.remove('on');
+    document.getElementById('cgrid').style.display = 'grid';
+    document.getElementById('cacc').style.display = 'none';
+    duaView = 'grid';
+  } else {
+    document.getElementById('val').classList.add('on');
+    document.getElementById('vat').classList.remove('on');
+    document.getElementById('adk-list').style.display = 'flex';
+    adkView = 'list';
+  }
 }
 
 // ══════════════════════════════════════
@@ -1638,12 +1706,6 @@ if ('serviceWorker' in navigator) {
         });
       })
       .catch(err => console.warn('[PWA] SW failed:', err));
-
-    // لما يتفعّل SW جديد، أعد تحميل الصفحة تلقائياً لضمان آخر إصدار
-    navigator.serviceWorker.addEventListener('controllerchange', () => {
-      console.log('[PWA] New SW activated — reloading page');
-      window.location.reload();
-    });
   });
 }
 
