@@ -1555,7 +1555,7 @@ let deferredPrompt = null;
 // Register Service Worker
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/lolaDuaakum/sw.js')
+    navigator.serviceWorker.register('sw.js')
       .then(reg => {
         console.log('[PWA] SW registered:', reg.scope);
         reg.active?.postMessage({ type: 'CACHE_DATA' });
