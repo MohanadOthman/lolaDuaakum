@@ -1606,10 +1606,18 @@ window.addEventListener('online', () => {
 const _urlParams = new URLSearchParams(window.location.search);
 const _shortcut = _urlParams.get('shortcut');
 if (_shortcut) {
-  document.addEventListener('DOMContentLoaded', () => {
+  window.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => {
-      // Navigate to hisn section
       const hisnNavBtn = document.querySelector('.nb[onclick*="hisn"]');
       if (hisnNavBtn) hisnNavBtn.click();
       setTimeout(() => {
-        if (_sho
+        if (_shortcut === 'morning') hisnQuick(27, 'أذكار الصباح والمساء', null);
+        else if (_shortcut === 'sleep') hisnQuick(28, 'أذكار النوم', null);
+      }, 400);
+    }, 600);
+  });
+}
+</script>
+
+</body>
+</html>
