@@ -9,7 +9,7 @@
    └─────────────────────────────────────────────────────┘
    ═══════════════════════════════════════════════════════════ */
 
-const APP_VERSION  = '1.0.3';
+const APP_VERSION  = '1.0.4';
 const CACHE_NAME   = `lda-v${APP_VERSION}`;
 const DATA_CACHE   = `lda-data-v${APP_VERSION}`;
 
@@ -17,7 +17,6 @@ const DATA_CACHE   = `lda-data-v${APP_VERSION}`;
 const SHELL_FILES = [
   '/',
   '/index.html',
-  '/kharita.html',
   '/manifest.json',
   '/icons/icon-192.png',
   '/icons/icon-512.png',
@@ -28,7 +27,6 @@ const DATA_FILES = [
   '/data/duas.json',
   '/data/adkar.json',
   '/data/adab-mawadi3.json',
-  '/data/kharita-adkar.json',
 ];
 
 // External fonts — cache on first use
@@ -98,7 +96,7 @@ self.addEventListener('fetch', event => {
   // ⑤ App shell & local assets
   if (url.origin === self.location.origin) {
     // index.html → Network First دائماً لضمان تحميل آخر إصدار
-    if (url.pathname === '/' || url.pathname.endsWith('index.html') || url.pathname.endsWith('kharita.html')) {
+    if (url.pathname === '/' || url.pathname.endsWith('index.html')) {
       event.respondWith(networkFirstWithCache(event.request, CACHE_NAME));
     } else {
       // باقي الأصول (CSS، JS، أيقونات) → Cache First للسرعة
